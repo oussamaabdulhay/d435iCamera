@@ -32,8 +32,11 @@ int main(int argc, char **argv)
                                                                   ROSUnit_msg_type::ROSUnit_Point,
                                                                   "/providers/yaw");
   ROSUnit* rosunit_camera = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher,
-                                                                  ROSUnit_msg_type::ROSUnit_Float,
+                                                                  ROSUnit_msg_type::ROSUnit_Point,
                                                                   "/camera_provider");
+  // ROSUnit* rosunit_angles = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher,
+  //                                                                 ROSUnit_msg_type::ROSUnit_Point,
+  //                                                                 "/camera_angles");
   // ROSUnit* rosunit_camera_y = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber,
   //                                                                 ROSUnit_msg_type::ROSUnit_Float,
   //                                                                 "/camera_provider");
@@ -63,6 +66,7 @@ int main(int argc, char **argv)
   rosunit_yaw_provider->addCallbackMsgReceiver((MsgReceiver*)rotate);
   detect->addCallbackMsgReceiver((MsgReceiver*)rotate);
   rotate->addCallbackMsgReceiver((MsgReceiver*)rosunit_camera);
+  //rotate->addCallbackMsgReceiver((MsgReceiver*)rosunit_angles);
   // rosunit_camera_x->addCallbackMsgReceiver((MsgReceiver*)rotate);
   // rosunit_camera_y->addCallbackMsgReceiver((MsgReceiver*)rotate);
 

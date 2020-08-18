@@ -36,7 +36,7 @@ void rayrotation::receiveMsgData(DataMessage *t_msg, int t_channel)
         }
         else if (t_channel == receiving_channels::ch_roll)
         {
-            drone_orientation.x = provider->getData().x;
+            drone_orientation.x =provider->getData().x;
         }
         else if (t_channel == receiving_channels::ch_pitch)
         {
@@ -58,6 +58,7 @@ void rayrotation::receiveMsgData(DataMessage *t_msg, int t_channel)
         Vector2DMsg* pixel_location = (Vector2DMsg*) t_msg;
                ball_location.x=pixel_location->getData().x;
                ball_location.y=pixel_location->getData().y;
+               time=pixel_location->getData().time;
                //std::cout<<"hello";
                update_camera_angles();
                
@@ -114,11 +115,20 @@ Vector3D<float> rayrotation::Update_unit_vector(MatrixXd rotated_matrix)
     t_results.y = U_v.x * rotated_matrix(1, 0) + U_v.y * rotated_matrix(1, 1) + U_v.z * rotated_matrix(1, 2);
     t_results.z = U_v.x * rotated_matrix(2, 0) + U_v.y * rotated_matrix(2, 1) + U_v.z * rotated_matrix(2, 2);
 
-    z_parameter.data = (-t_results.z-0.4)*10;
-    this->emitMsgUnicastDefault((DataMessage *)&z_parameter);
+    obj_pos.x = (int)time.nsec;
+    obj_pos.y = -t_results.y*100;// It is better to flip this from origin //Adjusted the code to the time stamp of the message.
+    obj_pos.z = (int)time.sec;
+    // all_parameters.setVector3DMessage(obj_pos);
+    // this->emitMsgUnicastDefault((DataMessage *)&all_parameters);
 
-    // y_parameter.data = (-t_results.y-0.4)*10;
+    // z_parameter.data = (-t_results.z)*100;
+    // this->emitMsgUnicastDefault((DataMessage *)&z_parameter);
+
+    // y_parameter.data = (-t_results.y)*100;
     // this->emitMsgUnicastDefault((DataMessage *)&y_parameter);
+
+    // x_parameter.data = (t_results.x)*10;
+    // this->emitMsgUnicastDefault((DataMessage *)&x_parameter);
     return t_results;
 }
 
@@ -153,12 +163,15 @@ void rayrotation::scale_and_translate()
 
 void rayrotation::update_camera_angles()
 {
-    float theta_yaw = -(1.2043 / 640) * ball_location.x;
-    float theta_roll = (0.7330 / 480) * ball_location.y;
+    float theta_yaw = -(1.2043 / 640.0) * ball_location.x;
+    float theta_roll = (0.7330 / 480.0) * ball_location.y;
 
     camera_angle.x = theta_roll;
     camera_angle.y = 0;
     camera_angle.z = theta_yaw;
+
+    // camera_parameters.setVector3DMessage(camera_angle);
+    // this->emitMsgUnicastDefault((DataMessage *)&camera_parameters);
 
     this->update_rotation_matrices();
 }

@@ -47,7 +47,7 @@ public:
 
     const std::string OPENCV_WINDOW = "Image window";
     int iLowH = 261;//200 //97
-    int iHighH = 5500;//256 //179
+    int iHighH = 3500;//256 //179
 
     int iLowS = 255;//96 //164
     int iHighS = 256;//255 //255
@@ -59,7 +59,7 @@ public:
     ~BallDetectorDepth();
 
     void imageCb(const sensor_msgs::ImageConstPtr &msg);
-    cv::Point2d changeCrop(cv::Point2d ball_location_temp);
+    //cv::Point2d changeCrop(cv::Point2d ball_location_temp);
     // Setup SimpleBlobDetector parameters.
     cv::SimpleBlobDetector::Params params;
 };

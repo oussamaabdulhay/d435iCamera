@@ -3,7 +3,7 @@
 #include "common_srv/Vector3D.hpp"
 #include <iostream>
 #include <math.h>
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 using Eigen::MatrixXd;
 
 class RotationMatrix3by3 : public Matrix3by3

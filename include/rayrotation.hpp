@@ -10,8 +10,9 @@
 #include "OptitrackMessage.hpp"
 #include <iostream>
 #include <math.h>
-#include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 #include "common_srv/FloatMsg.hpp"
+#include <ros/ros.h>
 using Eigen::MatrixXd;
 
 class rayrotation: public MsgEmitter, public MsgReceiver
@@ -19,11 +20,13 @@ class rayrotation: public MsgEmitter, public MsgReceiver
     public:
         cv::Point2f ball_location;
         RotationMatrix3by3 R_o_d,R_d_c;
+        ros::Time time;
         Vector3D<float> drone_position, drone_orientation,U_v,P_b,camera_angle,rotated_unit_vector;
         MatrixXd MultiplyMatrices(MatrixXd R_inertia, MatrixXd R_drone);
         void scale_and_translate();
-        FloatMsg z_parameter,y_parameter;
-        //Vector3DMessage z_parameter;
+        FloatMsg z_parameter,y_parameter,x_parameter;
+        Vector3DMessage all_parameters,camera_parameters;
+        Vector3D<float> obj_pos;
         Vector3D<float> Update_unit_vector(MatrixXd);
         void receiveMsgData(DataMessage* t_msg) {};
         void receiveMsgData(DataMessage* t_msg, int t_channel);

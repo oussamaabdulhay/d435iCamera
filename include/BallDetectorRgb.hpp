@@ -14,7 +14,8 @@
 #include <iostream>
 #include "common_srv/Vector2D.hpp"
 #include "common_srv/Vector2DMsg.hpp"
-
+#include "medianFilter.hpp"
+#include <opencv2/features2d.hpp>
 
 class BallDetectorRgb: public MsgEmitter, public MsgReceiver
 {
@@ -24,19 +25,27 @@ public:
     image_transport::ImageTransport it_;
     image_transport::Subscriber image_sub_;
     Vector2DMsg pixel_location;
+    float threshold;
+    Vector2D<float> obj_pos;
+    cv::Point2d _c_;
+    std::vector<cv::Point2f> temp;
     const std::string OPENCV_WINDOW = "Image window";
+    std::vector<cv::KeyPoint> keypoints;
+    medianFilter* filter=new medianFilter();
+     float point_of_interest;
     int iLowH = 0;
-    int iHighH = 18;
+    int iHighH = 79;
 
     int iLowS = 131;
     int iHighS = 255;
 
     int iLowV = 82;
     int iHighV = 255;
-    Vector2D<float> _c_;
+    //Vector2D<float> _c_;
 
     BallDetectorRgb(ros::NodeHandle&);
     ~BallDetectorRgb();
 
     void imageCb(const sensor_msgs::ImageConstPtr &msg);
+    cv::SimpleBlobDetector::Params params;
 };
