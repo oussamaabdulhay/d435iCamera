@@ -2,17 +2,13 @@
 
 BallDetectorDepth::BallDetectorDepth(ros::NodeHandle &main_nodehandle) : it_(nh_)
 {
-  // Subscribe to input video feed and publish output video feed
   nh_ = main_nodehandle;
-  image_sub_ = it_.subscribe("/camera/depth/image_rect_raw", 1,
-                             &BallDetectorDepth::imageCb, this);
-  //image_pub_ = it_.advertise("/detection_depth/output_video", 1);
+
+  this->_output_port = new OutputPort(ports_id::OP_0_DATA, this);
+  _ports = {_output_port};
+  image_sub_ = it_.subscribe("/camera/depth/image_rect_raw", 1, &BallDetectorDepth::imageCb, this);
   puby = nh_.advertise<std_msgs::Float32>("camera_provider_y", 1);
   pubx = nh_.advertise<std_msgs::Float32>("camera_provider_x", 1);
-  pub_sec = nh_.advertise<std_msgs::UInt64>("Nuc_time/seconds", 1);
-  pub_nano = nh_.advertise<std_msgs::UInt64>("Nuc_time/nanoseconds", 1);
-  //pubsize = nh_.advertise<std_msgs::Float32>("size", 100);
-  // pub_array_size = nh_.advertise<std_msgs::Float32>("array_size", 100);
   //cv::namedWindow(OPENCV_WINDOW);
 
   // Filter by Area.
@@ -37,8 +33,6 @@ BallDetectorDepth::BallDetectorDepth(ros::NodeHandle &main_nodehandle) : it_(nh_
   crop_size.x = 300; //640
   crop_size.y = 150; //480
 
-  first_iteration = true;
-  rest = false;
 }
 
 BallDetectorDepth::~BallDetectorDepth()
@@ -60,14 +54,7 @@ void BallDetectorDepth::imageCb(const sensor_msgs::ImageConstPtr &msg)
 
     return;
   }
-  ros::Time begin = ros::Time::now();
-  obj_pos.time=begin;
-  std_msgs::UInt64 msg_sec;
-  std_msgs::UInt64 msg_nano;
-  msg_sec.data=begin.toSec();
-  msg_nano.data=begin.toNSec();
-  pub_sec.publish(msg_sec);
-  pub_nano.publish(msg_nano);
+
   cv_ptr->image.convertTo(imgOriginal, CV_64F);
   cv::inRange(imgOriginal, cv::Scalar(iLowH), cv::Scalar(iHighH), imgThresholded);
   croppedFrame = imgThresholded(cv::Rect(0, 70,640,300)); //70 80 500 300  //70 0 500 480
@@ -85,8 +72,9 @@ void BallDetectorDepth::imageCb(const sensor_msgs::ImageConstPtr &msg)
     std::cout << "EMPTY KEYPOINTS\n";
     puby.publish(msg_y);
     pubx.publish(msg_x);
-    pixel_location.setVector2DMsg(obj_pos);
-    this->emitMsgUnicastDefault((DataMessage *)&pixel_location);
+    Vector2DMsg output_msg;
+    output_msg.data = obj_pos;
+    this->_output_port->receiveMsgData((DataMsg*) &output_msg);
     std::cout << "EMPTY KEYPOINTS\n";
   }
 
@@ -98,37 +86,24 @@ void BallDetectorDepth::imageCb(const sensor_msgs::ImageConstPtr &msg)
     if (temp.size() == 3)
     {
       std_dev = filter->getStdDev(temp);
-      //std::cout << std_dev << std::endl;
       if (std_dev < threshold)
       {
         _c_.x = temp.back().x;
         _c_.y = temp.back().y;
-        //if(_c_.x!=0 && _c_.y!=0)
-        // {
-        // crop_size=changeCrop(_c_);
-        // }
         msg_y.data = _c_.y - 150;
         msg_x.data = _c_.x - 320;
         obj_pos.y = _c_.y-150;
         obj_pos.x = _c_.x-320;
-        float x_temp;
-        x_temp = keypoints[0].size;
-        msg_size.data = x_temp;
-        //pubsize.publish(msg_size);
-        pixel_location.setVector2DMsg(obj_pos);
-        this->emitMsgUnicastDefault((DataMessage *)&pixel_location);
+        Vector2DMsg output_msg;
+        output_msg.data = obj_pos;
+        this->_output_port->receiveMsgData((DataMsg*) &output_msg);
         puby.publish(msg_y);
         pubx.publish(msg_x);
       }
 
       else
       {
-        //std::cout << "standard dev too high\n";
         _c_ = filter->getMedian(temp, _c_);
-        //if(_c_.x!=0 && _c_.y!=0)
-        // {
-        // crop_size=changeCrop(_c_);
-        // }
         msg_y.data = _c_.y - 150;
         msg_x.data = _c_.x - 320;
         obj_pos.y = _c_.y-150;
@@ -136,8 +111,9 @@ void BallDetectorDepth::imageCb(const sensor_msgs::ImageConstPtr &msg)
         point_of_interest = sqrt((pow(_c_.x, 2)) + (_c_.y, 2));
         puby.publish(msg_y);
         pubx.publish(msg_x);
-        pixel_location.setVector2DMsg(obj_pos);
-        this->emitMsgUnicastDefault((DataMessage *)&pixel_location);
+       Vector2DMsg output_msg;
+        output_msg.data = obj_pos;
+        this->_output_port->receiveMsgData((DataMsg*) &output_msg);
       }
       temp.erase(temp.begin());
     }

@@ -4,27 +4,30 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/core/types.hpp>
+#include <opencv2/features2d.hpp>
+#include <opencv2/photo.hpp>
 #include <cmath>
 #include "std_msgs/Float32.h"
 #include "std_msgs/Int32.h"
 #include "std_msgs/UInt32.h"
 #include "std_msgs/UInt64.h"
-#include <opencv2/photo.hpp>
 #include "geometry_msgs/Point.h"
 #include <sstream>
 #include <ros/ros.h>
-#include "common_srv/MsgEmitter.hpp"
-#include "common_srv/MsgReceiver.hpp"
 #include <iostream>
-#include "common_srv/Vector2D.hpp"
-#include "common_srv/Vector2DMsg.hpp"
-#include <opencv2/features2d.hpp>
 #include <vector>
 #include <algorithm>
 #include "medianFilter.hpp"
+#include "HEAR_core/InputPort.hpp"
+#include "HEAR_core/OutputPort.hpp"
+#include "HEAR_math/Vector2D.hpp"
+#include "HEAR_msg/Vector2DMsg.hpp"
+#include "HEAR_core/Block.hpp"
 
-class BallDetectorDepth : public MsgEmitter, public MsgReceiver
+class BallDetectorDepth : public Block
 {
+private:
+    Port* _output_port;
 public:
     ros::NodeHandle nh_;
     image_transport::ImageTransport it_;
@@ -37,7 +40,8 @@ public:
     float threshold;
     Vector2DMsg pixel_location;
     double crop_col,crop_row,change_in_loc_x,change_in_loc_y;
-    bool first_iteration, rest;
+    enum ports_id {OP_0_DATA};
+    void process(DataMsg* t_msg, Port* t_port){};
     
 
     std::vector<std::vector<cv::Point>> contours;
@@ -62,7 +66,5 @@ public:
     ~BallDetectorDepth();
 
     void imageCb(const sensor_msgs::ImageConstPtr &msg);
-    //cv::Point2d changeCrop(cv::Point2d ball_location_temp);
-    // Setup SimpleBlobDetector parameters.
     cv::SimpleBlobDetector::Params params;
 };

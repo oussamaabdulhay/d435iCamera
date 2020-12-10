@@ -13,55 +13,55 @@ rayrotation_rgb::rayrotation_rgb()
 
     x = false;
     y = false;
+    
+    this->_input_port_0 = new InputPort(ports_id::IP_0_CAMERA, this);
+    this->_input_port_1 = new InputPort(ports_id::IP_1_X_POSITION, this);
+    this->_input_port_2 = new InputPort(ports_id::IP_2_Y_POSITION, this);
+    this->_input_port_3 = new InputPort(ports_id::IP_3_Z_POSITION, this);
+    this->_input_port_4 = new InputPort(ports_id::IP_4_ROLL, this);
+    this->_input_port_5 = new InputPort(ports_id::IP_5_PITCH, this);
+    this->_input_port_6 = new InputPort(ports_id::IP_6_YAW, this);
+    this->_output_port = new OutputPort(ports_id::OP_0_DATA, this);
+    _ports = {_input_port_0, _input_port_1,_input_port_2 ,_input_port_3,_input_port_4,_input_port_5,_input_port_6,_output_port};
 }
 
 rayrotation_rgb::~rayrotation_rgb()
 {
 }
 
-void rayrotation_rgb::receiveMsgData(DataMessage *t_msg, int t_channel)
-{
+void rayrotation_rgb::process(DataMsg* t_msg, Port* t_port) {
+    Vector3DMsg *provider = (Vector3DMsg *)t_msg;
 
-    if (t_msg->getType() == msg_type::VECTOR3D)
-    {
-        Vector3DMessage *provider = (Vector3DMessage *)t_msg;
-
-        if (t_channel == receiving_channels::ch_x)
-        {
-            drone_position.x = provider->getData().x;
-        }
-        else if (t_channel == receiving_channels::ch_y)
-        {
-            drone_position.y = provider->getData().x;
-        }
-        else if (t_channel == receiving_channels::ch_roll)
-        {
-            drone_orientation.x =provider->getData().x;
-        }
-        else if (t_channel == receiving_channels::ch_pitch)
-        {
-            drone_orientation.y = provider->getData().x;
-        }
-        else if (t_channel == receiving_channels::ch_yaw)
-        {
-            drone_orientation.z = provider->getData().x;
-        }
-    }
-    else if (t_msg->getType() == msg_type::optitrack)
-    {
-        OptitrackMessage *opti_msg = (OptitrackMessage *)t_msg;
-        drone_position.z = opti_msg->getPosition().z;
-    }
-
-    else if(t_msg->getType() == msg_type::VECTOR2D)
+    if(t_port->getID() == ports_id::IP_0_CAMERA)
     {
         Vector2DMsg* pixel_location = (Vector2DMsg*) t_msg;
-               ball_location.x=pixel_location->getData().x;
-               ball_location.y=pixel_location->getData().y;
-               time=pixel_location->getData().time;
-               //std::cout<<"Time recieved Nano_seconds="<<time.toNSec()<<"\n";
-               update_camera_angles();
-               
+        ball_location.x=pixel_location->data.x;
+        ball_location.y=pixel_location->data.y;
+        update_camera_angles();
+    }
+    else if(t_port->getID() == ports_id::IP_1_X_POSITION)
+    { 
+        drone_position.x = provider->data.x;
+    }
+    else if(t_port->getID() == ports_id::IP_2_Y_POSITION)
+    { 
+        drone_position.y = provider->data.x;
+    }
+    else if(t_port->getID() == ports_id::IP_3_Z_POSITION)
+    { 
+        drone_position.z = provider->data.z;
+    }
+    else if(t_port->getID() == ports_id::IP_4_ROLL)
+    { 
+        drone_orientation.x =provider->data.x;
+    }
+    else if(t_port->getID() == ports_id::IP_5_PITCH)
+    { 
+        drone_orientation.x =provider->data.x;
+    }
+    else if(t_port->getID() == ports_id::IP_6_YAW)
+    { 
+        drone_orientation.x =provider->data.x;
     }
 }
 
@@ -96,22 +96,16 @@ Vector3D<float> rayrotation_rgb::Update_unit_vector(MatrixXd rotated_matrix)
     t_results.y = U_v.x * rotated_matrix(1, 0) + U_v.y * rotated_matrix(1, 1) + U_v.z * rotated_matrix(1, 2);
     t_results.z = U_v.x * rotated_matrix(2, 0) + U_v.y * rotated_matrix(2, 1) + U_v.z * rotated_matrix(2, 2);
 
-     obj_pos.time=time;
-     //std::cout<<"Nano_seconds="<< obj_pos.time.toNSec()<<"\n";
-     obj_pos.x=0;
-     obj_pos.y =-t_results.y*100;// -t_results.y*100;// It is better to flip this from origin //Adjusted the code to the time stamp of the message.
-     obj_pos.z=-t_results.z*100;
-     all_parameters.setVector3DMessageUint64(obj_pos);
-     this->emitMsgUnicastDefault((DataMessage *)&all_parameters);
+ 
+    
+    obj_pos.x=0;
+    obj_pos.y =-1*t_results.y*100;
+    obj_pos.z=-1*t_results.z*100;
 
-    // z_parameter.data = (-t_results.z)*100;
-    // this->emitMsgUnicastDefault((DataMessage *)&z_parameter);
+    Vector3DMsg point_msg;
+    point_msg.data = obj_pos;
+    this->_output_port->receiveMsgData(&point_msg);
 
-    //  y_parameter.data = (-t_results.y)*100;
-    //  this->emitMsgUnicastDefault((DataMessage *)&y_parameter);
-
-    // x_parameter.data = (t_results.x)*10;
-    // this->emitMsgUnicastDefault((DataMessage *)&x_parameter);
     return t_results;
 }
 
@@ -138,10 +132,6 @@ void rayrotation_rgb::scale_and_translate()
     rotated_unit_vector.y = rotated_unit_vector.y-P_b.y;
     rotated_unit_vector.z = rotated_unit_vector.z-P_b.z;
 
-    // z_parameter.setVector3DMessage(rotated_unit_vector);
-    // this->emitMsgUnicastDefault((DataMessage *)&z_parameter);
-
-
 }
 
 void rayrotation_rgb::update_camera_angles()
@@ -152,9 +142,6 @@ void rayrotation_rgb::update_camera_angles()
     camera_angle.x = theta_roll;
     camera_angle.y = 0;
     camera_angle.z = theta_yaw;
-
-    // camera_parameters.setVector3DMessage(camera_angle);
-    // this->emitMsgUnicastDefault((DataMessage *)&camera_parameters);
 
     this->update_rotation_matrices();
 }
@@ -168,6 +155,8 @@ void rayrotation_rgb::update_rotation_matrices()
 
     R_inertia = R_o_d.Update(drone_orientation); //Create the rotation matrices
     R_drone = R_d_c.Update(camera_angle);
+
+    R_inertia=R_inertia.inverse();
 
     rotated_matrix = MultiplyMatrices(R_inertia, R_drone); //Multiply the rotation matrices;
 

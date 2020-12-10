@@ -5,15 +5,16 @@
 BallDetectorRgb::BallDetectorRgb(ros::NodeHandle &main_nodehandle)
     : it_(nh_)
 {
-    nh_=main_nodehandle;
-    image_sub_ = it_.subscribe("/camera/color/image_raw", 1,
-        &BallDetectorRgb::imageCb, this);
-    puby = nh_.advertise<std_msgs::Float32>("camera_provider_y", 1);
-    pubx = nh_.advertise<std_msgs::Float32>("camera_provider_x", 1);
-    pub_sec = nh_.advertise<std_msgs::UInt64>("Nuc_time/seconds", 1);
-    pub_nano = nh_.advertise<std_msgs::UInt64>("Nuc_time/nanoseconds", 1);
+  nh_=main_nodehandle;
 
+  this->_output_port = new OutputPort(ports_id::OP_0_DATA, this);
+  _ports = {_output_port};
 
+  image_sub_ = it_.subscribe("/camera/color/image_raw", 1,&BallDetectorRgb::imageCb, this);
+    
+  puby = nh_.advertise<std_msgs::Float32>("camera_provider_y", 1);
+  pubx = nh_.advertise<std_msgs::Float32>("camera_provider_x", 1);
+  
   //cv::namedWindow(OPENCV_WINDOW);
 
   params.filterByArea = true;
@@ -56,8 +57,6 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
         return;
     }
     ros::Time begin = ros::Time::now();
-    obj_pos.time=begin;
-    //std::cout<<"Time Original Nano_seconds="<<begin.toNSec()<<"\n";
     std_msgs::UInt64 msg_sec;
     std_msgs::UInt64 msg_nano;
     msg_sec.data=begin.toSec();
@@ -90,8 +89,9 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
     std::cout << "EMPTY KEYPOINTS\n";
     puby.publish(msg_y);
     pubx.publish(msg_x);
-    pixel_location.setVector2DMsg(obj_pos);
-    this->emitMsgUnicastDefault((DataMessage *)&pixel_location);
+    Vector2DMsg output_msg;
+    output_msg.data = obj_pos;
+    this->_output_port->receiveMsgData((DataMsg*) &output_msg);
   }
 
   else
@@ -111,8 +111,9 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
         msg_x.data = _c_.x - 320;
         obj_pos.y = _c_.y-240;
         obj_pos.x = _c_.x-320;
-        pixel_location.setVector2DMsg(obj_pos);
-        this->emitMsgUnicastDefault((DataMessage *)&pixel_location);
+        Vector2DMsg output_msg;
+        output_msg.data = obj_pos;
+        this->_output_port->receiveMsgData((DataMsg*) &output_msg);
         puby.publish(msg_y);
         pubx.publish(msg_x);
       }
@@ -128,8 +129,9 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
         pubx.publish(msg_x);
         obj_pos.y = _c_.y-240;
         obj_pos.x = _c_.x-320;
-        pixel_location.setVector2DMsg(obj_pos);
-        this->emitMsgUnicastDefault((DataMessage *)&pixel_location);
+        Vector2DMsg output_msg;
+        output_msg.data = obj_pos;
+        this->_output_port->receiveMsgData((DataMsg*) &output_msg);
       }
       temp.erase(temp.begin());
     }

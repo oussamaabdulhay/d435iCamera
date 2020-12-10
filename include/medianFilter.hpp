@@ -2,7 +2,6 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
-#include "common_srv/Vector2D.hpp"
 #include <opencv2/core/types.hpp>
 
 class medianFilter

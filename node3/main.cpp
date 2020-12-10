@@ -3,77 +3,57 @@
 #include "BallDetectorDepth.hpp"
 #include "rayrotation_depth.hpp"
 #include <opencv2/core/types.hpp>
-#include "common_srv/ROSUnit_Factory.hpp"
+#include "HEAR_ROS_BRIDGE/ROSUnit_Factory.hpp"
 #include "ROSUnit_Optitrack.hpp"
 
- 
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "depth_node");
-  ros::NodeHandle nh_;
-  ROSUnit_Factory ROSUnit_Factory_main{nh_};
-  BallDetectorDepth* detect=new BallDetectorDepth(nh_);
-  ROSUnit_Optitrack* position_in_z=new ROSUnit_Optitrack(nh_);
+ros::init(argc, argv, "depth_node");
+ros::NodeHandle nh_;
+ROSUnit_Factory ROSUnit_Factory_main{nh_};
+BallDetectorDepth* detection=new BallDetectorDepth(nh_);
+ROSUnit_Optitrack* position_in_z=new ROSUnit_Optitrack(nh_);
 
-  ROSUnit* rosunit_x_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
+
+ROSUnit* rosunit_x_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                   ROSUnit_msg_type::ROSUnit_Point,
                                                                   "/providers/x");
-  ROSUnit* rosunit_y_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
+ROSUnit* rosunit_y_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                   ROSUnit_msg_type::ROSUnit_Point,
                                                                   "/providers/y");
-  ROSUnit* rosunit_roll_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
+ROSUnit* rosunit_roll_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                   ROSUnit_msg_type::ROSUnit_Point,
                                                                   "/providers/roll");
-  ROSUnit* rosunit_pitch_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
+ROSUnit* rosunit_pitch_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                   ROSUnit_msg_type::ROSUnit_Point,
                                                                   "/providers/pitch");
-  ROSUnit* rosunit_yaw_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
+ROSUnit* rosunit_yaw_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                   ROSUnit_msg_type::ROSUnit_Point,
                                                                   "/providers/yaw");
-  ROSUnit* rosunit_camera = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher,
-                                                                  ROSUnit_msg_type::ROSUnit_PointUint64,
+ROSUnit* rosunit_camera = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher,
+                                                                  ROSUnit_msg_type::ROSUnit_Point,
                                                                   "/camera_provider");
-  // ROSUnit* rosunit_camera_y = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber,
-  //                                                                 ROSUnit_msg_type::ROSUnit_Float,
-  //                                                                 "/camera_provider");
-  // ROSUnit* rosunit_camera_x = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber,
-  //                                                                 ROSUnit_msg_type::ROSUnit_Float,
-  //        
-  
+                                                                
 
-  rayrotation_depth* rotate = new rayrotation_depth();
+rayrotation_depth* rotate = new rayrotation_depth();
 
-  rosunit_x_provider->setEmittingChannel((int)rayrotation_depth::receiving_channels::ch_x);
-  rosunit_y_provider->setEmittingChannel((int)rayrotation_depth::receiving_channels::ch_y);
-  position_in_z->setEmittingChannel((int)rayrotation_depth::receiving_channels::ch_z);
-  rosunit_roll_provider->setEmittingChannel((int)rayrotation_depth::receiving_channels::ch_roll);
-  rosunit_pitch_provider->setEmittingChannel((int)rayrotation_depth::receiving_channels::ch_pitch);
-  rosunit_yaw_provider->setEmittingChannel((int)rayrotation_depth::receiving_channels::ch_yaw);
-  detect->setEmittingChannel((int)rayrotation_depth::receiving_channels::camera);
-  // rosunit_camera_y->setEmittingChannel((int)rayrotation::receiving_channels::ch_camera_y);
-  // rosunit_camera_x->setEmittingChannel((int)rayrotation::receiving_channels::ch_camera_x);
+detection->getPorts()[(int)BallDetectorDepth::ports_id::OP_0_DATA]->connect(rotate->getPorts()[(int)rayrotation_depth::ports_id::IP_0_CAMERA]);
+rosunit_x_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_0]->connect(rotate->getPorts()[(int)rayrotation_depth::ports_id::IP_1_X_POSITION]);
+rosunit_y_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_1]->connect(rotate->getPorts()[(int)rayrotation_depth::ports_id::IP_2_Y_POSITION]);
+position_in_z->getPorts()[(int)ROSUnit_Optitrack::ports_id::OP_0_OPT]->connect(rotate->getPorts()[(int)rayrotation_depth::ports_id::IP_3_Z_POSITION]);
+rosunit_roll_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_2]->connect(rotate->getPorts()[(int)rayrotation_depth::ports_id::IP_4_ROLL]);
+rosunit_pitch_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_3]->connect(rotate->getPorts()[(int)rayrotation_depth::ports_id::IP_5_PITCH]);
+rosunit_yaw_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_4]->connect(rotate->getPorts()[(int)rayrotation_depth::ports_id::IP_6_YAW]);
 
 
-  rosunit_x_provider->addCallbackMsgReceiver((MsgReceiver*)rotate);
-  rosunit_y_provider->addCallbackMsgReceiver((MsgReceiver*)rotate);
-  position_in_z->addCallbackMsgReceiver((MsgReceiver*)rotate);
-  rosunit_roll_provider->addCallbackMsgReceiver((MsgReceiver*)rotate);
-  rosunit_pitch_provider->addCallbackMsgReceiver((MsgReceiver*)rotate);
-  rosunit_yaw_provider->addCallbackMsgReceiver((MsgReceiver*)rotate);
-  detect->addCallbackMsgReceiver((MsgReceiver*)rotate);
-  rotate->addCallbackMsgReceiver((MsgReceiver*)rosunit_camera);
-  // rosunit_camera_x->addCallbackMsgReceiver((MsgReceiver*)rotate);
-  // rosunit_camera_y->addCallbackMsgReceiver((MsgReceiver*)rotate);
+rotate->getPorts()[(int)rayrotation_depth::ports_id::OP_0_DATA]->connect(rosunit_camera->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
 
-
-  ros::Rate r(200);
-  while (ros::ok())
-  {
-    r.sleep();
-    ros::spinOnce();
-  }
-  return 0;
+ros::Rate r(200);
+while (ros::ok())
+{
+  r.sleep();
+  ros::spinOnce();
 }
-
-
+return 0;
+}

@@ -1,6 +1,6 @@
 #pragma once
-#include "Matrix3by3.hpp"
-#include "common_srv/Vector3D.hpp"
+#include "HEAR_math/Matrix3by3.hpp"
+#include "HEAR_math/Vector3D.hpp"
 #include <iostream>
 #include <math.h>
 #include <eigen3/Eigen/Dense>
