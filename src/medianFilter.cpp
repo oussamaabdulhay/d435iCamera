@@ -27,7 +27,7 @@ float medianFilter::getStdDev(std::vector<cv::Point2f> temp)
         variance = variance + pow((points[i] - mean), 2);
     }
 
-    variance = variance / 5;
+    variance = variance / points.size();
     std_dev = sqrt(variance);
     points.clear();
     return std_dev;

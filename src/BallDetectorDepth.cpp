@@ -9,28 +9,30 @@ BallDetectorDepth::BallDetectorDepth(ros::NodeHandle &main_nodehandle) : it_(nh_
   //image_pub_ = it_.advertise("/detection_depth/output_video", 1);
   puby = nh_.advertise<std_msgs::Float32>("camera_provider_y", 1);
   pubx = nh_.advertise<std_msgs::Float32>("camera_provider_x", 1);
+  pub_sec = nh_.advertise<std_msgs::UInt64>("Nuc_time/seconds", 1);
+  pub_nano = nh_.advertise<std_msgs::UInt64>("Nuc_time/nanoseconds", 1);
   //pubsize = nh_.advertise<std_msgs::Float32>("size", 100);
   // pub_array_size = nh_.advertise<std_msgs::Float32>("array_size", 100);
-  cv::namedWindow(OPENCV_WINDOW);
+  //cv::namedWindow(OPENCV_WINDOW);
 
   // Filter by Area.
   params.filterByArea = true;
-  params.minArea = 400;
-  params.maxArea = 2000;
+  params.minArea = 800;
+  params.maxArea = 2100;
 
   // Filter by Circularity
   params.filterByCircularity = false;
   params.minCircularity = 0.1;
 
   // Filter by Convexity
-  params.filterByConvexity = true;
-  params.minConvexity = 0.6;
+  params.filterByConvexity = false;
+  params.minConvexity = 0.2;
 
   // Filter by Inertia
-  params.filterByInertia = true;
-  params.minInertiaRatio = 0.6;
+  params.filterByInertia = false;
+  params.minInertiaRatio = 0.2;
 
-  threshold = 0.5;
+  threshold = 0.7;
 
   crop_size.x = 300; //640
   crop_size.y = 150; //480
@@ -41,7 +43,7 @@ BallDetectorDepth::BallDetectorDepth(ros::NodeHandle &main_nodehandle) : it_(nh_
 
 BallDetectorDepth::~BallDetectorDepth()
 {
-  cv::destroyWindow(OPENCV_WINDOW);
+  //cv::destroyWindow(OPENCV_WINDOW);
 }
 
 void BallDetectorDepth::imageCb(const sensor_msgs::ImageConstPtr &msg)
@@ -58,7 +60,14 @@ void BallDetectorDepth::imageCb(const sensor_msgs::ImageConstPtr &msg)
 
     return;
   }
-
+  ros::Time begin = ros::Time::now();
+  obj_pos.time=begin;
+  std_msgs::UInt64 msg_sec;
+  std_msgs::UInt64 msg_nano;
+  msg_sec.data=begin.toSec();
+  msg_nano.data=begin.toNSec();
+  pub_sec.publish(msg_sec);
+  pub_nano.publish(msg_nano);
   cv_ptr->image.convertTo(imgOriginal, CV_64F);
   cv::inRange(imgOriginal, cv::Scalar(iLowH), cv::Scalar(iHighH), imgThresholded);
   croppedFrame = imgThresholded(cv::Rect(0, 70,640,300)); //70 80 500 300  //70 0 500 480
@@ -70,13 +79,14 @@ void BallDetectorDepth::imageCb(const sensor_msgs::ImageConstPtr &msg)
   std_msgs::Float32 msg_y;
   std_msgs::Float32 msg_size;
   std_msgs::Float32 msg_array_size;
-
+  std::cout<<keypoints.size()<<std::endl;
   if (keypoints.size() == 0)
   {
-    // msg_y.data = 240;
-    // msg_x.data = 165;
-    // puby.publish(msg_y);
-    // pubx.publish(msg_x);
+    std::cout << "EMPTY KEYPOINTS\n";
+    puby.publish(msg_y);
+    pubx.publish(msg_x);
+    pixel_location.setVector2DMsg(obj_pos);
+    this->emitMsgUnicastDefault((DataMessage *)&pixel_location);
     std::cout << "EMPTY KEYPOINTS\n";
   }
 
@@ -88,7 +98,7 @@ void BallDetectorDepth::imageCb(const sensor_msgs::ImageConstPtr &msg)
     if (temp.size() == 3)
     {
       std_dev = filter->getStdDev(temp);
-      std::cout << std_dev << std::endl;
+      //std::cout << std_dev << std::endl;
       if (std_dev < threshold)
       {
         _c_.x = temp.back().x;
@@ -97,10 +107,10 @@ void BallDetectorDepth::imageCb(const sensor_msgs::ImageConstPtr &msg)
         // {
         // crop_size=changeCrop(_c_);
         // }
-        msg_y.data = _c_.y - 240;
-        msg_x.data = _c_.x - 215;
-        obj_pos.x = _c_.x-215;
-        obj_pos.y = _c_.y-240;
+        msg_y.data = _c_.y - 150;
+        msg_x.data = _c_.x - 320;
+        obj_pos.y = _c_.y-150;
+        obj_pos.x = _c_.x-320;
         float x_temp;
         x_temp = keypoints[0].size;
         msg_size.data = x_temp;
@@ -113,16 +123,16 @@ void BallDetectorDepth::imageCb(const sensor_msgs::ImageConstPtr &msg)
 
       else
       {
-        std::cout << "standard dev too high\n";
+        //std::cout << "standard dev too high\n";
         _c_ = filter->getMedian(temp, _c_);
         //if(_c_.x!=0 && _c_.y!=0)
         // {
         // crop_size=changeCrop(_c_);
         // }
-        msg_x.data = _c_.x - 215;
-        msg_y.data = _c_.y - 240;
-        obj_pos.x = _c_.x-215;
-        obj_pos.y = _c_.y-240;
+        msg_y.data = _c_.y - 150;
+        msg_x.data = _c_.x - 320;
+        obj_pos.y = _c_.y-150;
+        obj_pos.x = _c_.x-320;
         point_of_interest = sqrt((pow(_c_.x, 2)) + (_c_.y, 2));
         puby.publish(msg_y);
         pubx.publish(msg_x);
@@ -133,49 +143,20 @@ void BallDetectorDepth::imageCb(const sensor_msgs::ImageConstPtr &msg)
     }
   }
 
-  cv::createTrackbar("LowH", OPENCV_WINDOW, &iLowH, 10000);
-  cv::createTrackbar("HighH", OPENCV_WINDOW, &iHighH, 10000);
+  // cv::createTrackbar("LowH", OPENCV_WINDOW, &iLowH, 10000);
+  // cv::createTrackbar("HighH", OPENCV_WINDOW, &iHighH, 10000);
 
-  cv::createTrackbar("LowS", OPENCV_WINDOW, &iLowS, 256);
-  cv::createTrackbar("HighS", OPENCV_WINDOW, &iHighS, 256);
+  // cv::createTrackbar("LowS", OPENCV_WINDOW, &iLowS, 256);
+  // cv::createTrackbar("HighS", OPENCV_WINDOW, &iHighS, 256);
 
-  cv::createTrackbar("LowV", OPENCV_WINDOW, &iLowV, 256);
-  cv::createTrackbar("HighV", OPENCV_WINDOW, &iHighV, 256);
-  cv::imshow("imgOriginal", imgOriginal);
-  cv::imshow("imgThresholded", imgThresholded);
-  cv::imshow("im_with_keypoints", im_with_keypoints);
-  cv::imshow("croppedFrame", croppedFrame);
+  // cv::createTrackbar("LowV", OPENCV_WINDOW, &iLowV, 256);
+  // cv::createTrackbar("HighV", OPENCV_WINDOW, &iHighV, 256);
 
-  cv::waitKey(1);
+  // cv::imshow("imgOriginal", imgOriginal);
+  // cv::imshow("imgThresholded", imgThresholded);
+  // cv::imshow("im_with_keypoints", im_with_keypoints);
+  // cv::imshow("croppedFrame", croppedFrame);
+
+  // cv::waitKey(1);
 }
 
-// cv::Point2d BallDetectorDepth::changeCrop(cv::Point2d ball_location_temp)
-// {
-//   double temp_x, temp_y;
-//   std::cout<<"ball location x="<<ball_location_temp.x<<"\n";
-//   std::cout<<"ball location y="<<ball_location_temp.y<<"\n";
-//   temp_x = ball_location_temp.x+crop_size.x;
-//   temp_y = ball_location_temp.y+crop_size.y;
-//   if (first_iteration)
-//   {
-//     change_in_loc_x = temp_x;
-//     change_in_loc_y = temp_y;
-//     first_iteration = false;
-//     rest = true;  
-//   }
-//   if (rest)
-//   {
-//     std::cout<<"change x="<<change_in_loc_x<<"\n";
-//     std::cout<<"change y="<<change_in_loc_y<<"\n";
-//     change_in_loc_x = (temp_x-change_in_loc_x);
-//     change_in_loc_y = (temp_y-change_in_loc_y);
-//     std::cout<<"change x after="<<change_in_loc_x<<"\n";
-//     std::cout<<"change y after="<<change_in_loc_y<<"\n";
-//     crop_size.x = (crop_size.x + change_in_loc_x);
-//     crop_size.y = (crop_size.y + change_in_loc_y);
-//     std::cout<<"crop_size x="<<crop_size.x<<"\n";
-//     std::cout<<"crop_size y="<<crop_size.y<<"\n";
-//   }
-
-//   return crop_size;
-// }

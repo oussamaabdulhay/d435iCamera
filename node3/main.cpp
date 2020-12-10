@@ -1,7 +1,7 @@
 #include <ros/ros.h>
 #include <iostream>
 #include "BallDetectorDepth.hpp"
-#include "rayrotation.hpp"
+#include "rayrotation_depth.hpp"
 #include <opencv2/core/types.hpp>
 #include "common_srv/ROSUnit_Factory.hpp"
 #include "ROSUnit_Optitrack.hpp"
@@ -32,7 +32,7 @@ int main(int argc, char **argv)
                                                                   ROSUnit_msg_type::ROSUnit_Point,
                                                                   "/providers/yaw");
   ROSUnit* rosunit_camera = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher,
-                                                                  ROSUnit_msg_type::ROSUnit_Float,
+                                                                  ROSUnit_msg_type::ROSUnit_PointUint64,
                                                                   "/camera_provider");
   // ROSUnit* rosunit_camera_y = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber,
   //                                                                 ROSUnit_msg_type::ROSUnit_Float,
@@ -42,15 +42,15 @@ int main(int argc, char **argv)
   //        
   
 
-  rayrotation* rotate = new rayrotation();
+  rayrotation_depth* rotate = new rayrotation_depth();
 
-  rosunit_x_provider->setEmittingChannel((int)rayrotation::receiving_channels::ch_x);
-  rosunit_y_provider->setEmittingChannel((int)rayrotation::receiving_channels::ch_y);
-  position_in_z->setEmittingChannel((int)rayrotation::receiving_channels::ch_z);
-  rosunit_roll_provider->setEmittingChannel((int)rayrotation::receiving_channels::ch_roll);
-  rosunit_pitch_provider->setEmittingChannel((int)rayrotation::receiving_channels::ch_pitch);
-  rosunit_yaw_provider->setEmittingChannel((int)rayrotation::receiving_channels::ch_yaw);
-  detect->setEmittingChannel((int)rayrotation::receiving_channels::camera);
+  rosunit_x_provider->setEmittingChannel((int)rayrotation_depth::receiving_channels::ch_x);
+  rosunit_y_provider->setEmittingChannel((int)rayrotation_depth::receiving_channels::ch_y);
+  position_in_z->setEmittingChannel((int)rayrotation_depth::receiving_channels::ch_z);
+  rosunit_roll_provider->setEmittingChannel((int)rayrotation_depth::receiving_channels::ch_roll);
+  rosunit_pitch_provider->setEmittingChannel((int)rayrotation_depth::receiving_channels::ch_pitch);
+  rosunit_yaw_provider->setEmittingChannel((int)rayrotation_depth::receiving_channels::ch_yaw);
+  detect->setEmittingChannel((int)rayrotation_depth::receiving_channels::camera);
   // rosunit_camera_y->setEmittingChannel((int)rayrotation::receiving_channels::ch_camera_y);
   // rosunit_camera_x->setEmittingChannel((int)rayrotation::receiving_channels::ch_camera_x);
 

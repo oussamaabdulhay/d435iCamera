@@ -9,13 +9,15 @@
 #include "common_srv/Vector2DMsg.hpp"
 #include "OptitrackMessage.hpp"
 #include <iostream>
+#include "std_msgs/UInt64.h"
 #include <math.h>
 #include <eigen3/Eigen/Dense>
 #include "common_srv/FloatMsg.hpp"
 #include <ros/ros.h>
+#include "common_srv/Vector3DMessageUint64.hpp"
 using Eigen::MatrixXd;
 
-class rayrotation: public MsgEmitter, public MsgReceiver
+class rayrotation_rgb: public MsgEmitter, public MsgReceiver
 {
     public:
         cv::Point2f ball_location;
@@ -25,18 +27,19 @@ class rayrotation: public MsgEmitter, public MsgReceiver
         MatrixXd MultiplyMatrices(MatrixXd R_inertia, MatrixXd R_drone);
         void scale_and_translate();
         FloatMsg z_parameter,y_parameter,x_parameter;
-        Vector3DMessage all_parameters,camera_parameters;
+        Vector3DMessage camera_parameters;
+        Vector3DMessageUint64 all_parameters;
         Vector3D<float> obj_pos;
         Vector3D<float> Update_unit_vector(MatrixXd);
         void receiveMsgData(DataMessage* t_msg) {};
         void receiveMsgData(DataMessage* t_msg, int t_channel);
         void update_camera_angles();
         void update_rotation_matrices();
-        rayrotation();
+        rayrotation_rgb();
         bool x,y;
 
         
 
         enum receiving_channels {ch_x, ch_y, ch_z, ch_roll, ch_pitch, ch_yaw,camera,ch_camera_x,ch_camera_y};
-        ~rayrotation();
+        ~rayrotation_rgb();
 };

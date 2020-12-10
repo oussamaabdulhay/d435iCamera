@@ -1,7 +1,7 @@
-#include "rayrotation.hpp"
+#include "rayrotation_depth.hpp"
 using namespace std;
 
-rayrotation::rayrotation()
+rayrotation_depth::rayrotation_depth()
 {
     U_v.x = 1;
     U_v.y = 0;
@@ -15,11 +15,11 @@ rayrotation::rayrotation()
     y = false;
 }
 
-rayrotation::~rayrotation()
+rayrotation_depth::~rayrotation_depth()
 {
 }
 
-void rayrotation::receiveMsgData(DataMessage *t_msg, int t_channel)
+void rayrotation_depth::receiveMsgData(DataMessage *t_msg, int t_channel)
 {
 
     if (t_msg->getType() == msg_type::VECTOR3D)
@@ -59,32 +59,12 @@ void rayrotation::receiveMsgData(DataMessage *t_msg, int t_channel)
                ball_location.x=pixel_location->getData().x;
                ball_location.y=pixel_location->getData().y;
                time=pixel_location->getData().time;
-               //std::cout<<"hello";
                update_camera_angles();
                
     }
-    // else if (t_msg->getType() == msg_type::FLOAT)
-    // {
-    //     FloatMsg *pixel_location = (FloatMsg *)t_msg;
-
-    //     if (t_channel == receiving_channels::ch_camera_x && x == false)
-    //     {
-    //         ball_location.x = pixel_location->getData();
-    //         x = true;
-    //     }
-    //     else if (t_channel == receiving_channels::ch_camera_y && y == false)
-    //     {
-    //         ball_location.y = pixel_location->getData();
-    //         y = true;
-    //     }
-    //     if (x == true && y == true)
-    //     {
-    //         update_camera_angles();
-    //     }
-    //    }
 }
 
-MatrixXd rayrotation::MultiplyMatrices(MatrixXd R_inertia, MatrixXd R_drone)
+MatrixXd rayrotation_depth::MultiplyMatrices(MatrixXd R_inertia, MatrixXd R_drone)
 {
 
     MatrixXd rotated_matrix(3, 3);
@@ -108,31 +88,25 @@ MatrixXd rayrotation::MultiplyMatrices(MatrixXd R_inertia, MatrixXd R_drone)
     return rotated_matrix;
 }
 
-Vector3D<float> rayrotation::Update_unit_vector(MatrixXd rotated_matrix)
+Vector3D<float> rayrotation_depth::Update_unit_vector(MatrixXd rotated_matrix)
 {
     Vector3D<float> t_results;
     t_results.x = U_v.x * rotated_matrix(0, 0) + U_v.y * rotated_matrix(0, 1) + U_v.z * rotated_matrix(0, 2);
     t_results.y = U_v.x * rotated_matrix(1, 0) + U_v.y * rotated_matrix(1, 1) + U_v.z * rotated_matrix(1, 2);
     t_results.z = U_v.x * rotated_matrix(2, 0) + U_v.y * rotated_matrix(2, 1) + U_v.z * rotated_matrix(2, 2);
 
-    obj_pos.x = (int)time.nsec;
-    obj_pos.y = -t_results.y*100;// It is better to flip this from origin //Adjusted the code to the time stamp of the message.
-    obj_pos.z = (int)time.sec;
-    // all_parameters.setVector3DMessage(obj_pos);
-    // this->emitMsgUnicastDefault((DataMessage *)&all_parameters);
+     obj_pos.time=time;
 
-    // z_parameter.data = (-t_results.z)*100;
-    // this->emitMsgUnicastDefault((DataMessage *)&z_parameter);
+     obj_pos.x=0;
+     obj_pos.y =-t_results.y*100;// -t_results.y*100;// It is better to flip this from origin //Adjusted the code to the time stamp of the message.
+     obj_pos.z=-t_results.z*100;
+     all_parameters.setVector3DMessageUint64(obj_pos);
+     this->emitMsgUnicastDefault((DataMessage *)&all_parameters);
 
-    // y_parameter.data = (-t_results.y)*100;
-    // this->emitMsgUnicastDefault((DataMessage *)&y_parameter);
-
-    // x_parameter.data = (t_results.x)*10;
-    // this->emitMsgUnicastDefault((DataMessage *)&x_parameter);
     return t_results;
 }
 
-void rayrotation::scale_and_translate()
+void rayrotation_depth::scale_and_translate()
 {
     Vector3D<float> t_results;
     t_results.x = P_b.x - drone_position.x;
@@ -155,28 +129,21 @@ void rayrotation::scale_and_translate()
     rotated_unit_vector.y = rotated_unit_vector.y-P_b.y;
     rotated_unit_vector.z = rotated_unit_vector.z-P_b.z;
 
-    // z_parameter.setVector3DMessage(rotated_unit_vector);
-    // this->emitMsgUnicastDefault((DataMessage *)&z_parameter);
-
-
 }
 
-void rayrotation::update_camera_angles()
+void rayrotation_depth::update_camera_angles()
 {
-    float theta_yaw = -(1.2043 / 640.0) * ball_location.x;
-    float theta_roll = (0.7330 / 480.0) * ball_location.y;
+    float theta_yaw = -(1.51844 / 640.0) * ball_location.x;
+    float theta_roll = (1.01229 / 300.0) * ball_location.y;
 
     camera_angle.x = theta_roll;
     camera_angle.y = 0;
     camera_angle.z = theta_yaw;
 
-    // camera_parameters.setVector3DMessage(camera_angle);
-    // this->emitMsgUnicastDefault((DataMessage *)&camera_parameters);
-
     this->update_rotation_matrices();
 }
 
-void rayrotation::update_rotation_matrices()    
+void rayrotation_depth::update_rotation_matrices()    
 {
 
     MatrixXd R_drone(3, 3);
@@ -185,6 +152,8 @@ void rayrotation::update_rotation_matrices()
 
     R_inertia = R_o_d.Update(drone_orientation); //Create the rotation matrices
     R_drone = R_d_c.Update(camera_angle);
+
+    R_inertia=R_inertia.inverse();
 
     rotated_matrix = MultiplyMatrices(R_inertia, R_drone); //Multiply the rotation matrices;
 

@@ -6,6 +6,9 @@
 #include <opencv2/core/types.hpp>
 #include <cmath>
 #include "std_msgs/Float32.h"
+#include "std_msgs/Int32.h"
+#include "std_msgs/UInt32.h"
+#include "std_msgs/UInt64.h"
 #include <opencv2/photo.hpp>
 #include "geometry_msgs/Point.h"
 #include <sstream>
@@ -27,7 +30,7 @@ public:
     image_transport::ImageTransport it_;
     image_transport::Subscriber image_sub_;
     image_transport::Publisher image_pub_;
-    ros::Publisher puby,pubx,pubsize,pub_array_size;
+    ros::Publisher puby,pubx,pubsize,pub_array_size,pub_sec,pub_nano;
     cv::Point2d _c_,crop_size;
     Vector2D<float> obj_pos;
     std::vector<cv::Point2f> temp;
@@ -46,14 +49,14 @@ public:
     medianFilter* filter=new medianFilter();
 
     const std::string OPENCV_WINDOW = "Image window";
-    int iLowH = 261;//200 //97
-    int iHighH = 3500;//256 //179
+    int iLowH = 700;//200 //97
+    int iHighH = 3000;//256 //179
 
-    int iLowS = 255;//96 //164
+    int iLowS = 0;//96 //164
     int iHighS = 256;//255 //255
 
     int iLowV = 0; //0 //0
-    int iHighV = 129; //15 //30
+    int iHighV = 256; //15 //30
 
     BallDetectorDepth(ros::NodeHandle &);
     ~BallDetectorDepth();
