@@ -56,13 +56,6 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
 
         return;
     }
-    ros::Time begin = ros::Time::now();
-    std_msgs::UInt64 msg_sec;
-    std_msgs::UInt64 msg_nano;
-    msg_sec.data=begin.toSec();
-    msg_nano.data=begin.toNSec();
-    pub_sec.publish(msg_sec);
-    pub_nano.publish(msg_nano);
     cv::Mat imgOriginal = cv_ptr->image;
 
     cv::Mat imgHSV;
