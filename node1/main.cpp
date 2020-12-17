@@ -41,7 +41,7 @@ rosunit_yaw_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_2]->connect
 
 rotate->getPorts()[(int)rayrotation_rgb::ports_id::OP_0_DATA]->connect(rosunit_camera->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
 
-ros::Rate r(30);
+ros::Rate r(60);
 while (ros::ok())
 {
   r.sleep();
