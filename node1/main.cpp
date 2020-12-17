@@ -16,12 +16,7 @@ BallDetectorRgb* detection=new BallDetectorRgb(nh_);
 ROSUnit_Optitrack* position_in_z=new ROSUnit_Optitrack(nh_);
 
 
-ROSUnit* rosunit_x_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
-                                                                  ROSUnit_msg_type::ROSUnit_Point,
-                                                                  "/providers/x");
-ROSUnit* rosunit_y_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
-                                                                  ROSUnit_msg_type::ROSUnit_Point,
-                                                                  "/providers/y");
+
 ROSUnit* rosunit_roll_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                   ROSUnit_msg_type::ROSUnit_Point,
                                                                   "/providers/roll");
@@ -39,17 +34,14 @@ ROSUnit* rosunit_camera = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type:
 rayrotation_rgb* rotate = new rayrotation_rgb();
 
 detection->getPorts()[(int)BallDetectorRgb::ports_id::OP_0_DATA]->connect(rotate->getPorts()[(int)rayrotation_rgb::ports_id::IP_0_CAMERA]);
-rosunit_x_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_0]->connect(rotate->getPorts()[(int)rayrotation_rgb::ports_id::IP_1_X_POSITION]);
-rosunit_y_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_1]->connect(rotate->getPorts()[(int)rayrotation_rgb::ports_id::IP_2_Y_POSITION]);
-position_in_z->getPorts()[(int)ROSUnit_Optitrack::ports_id::OP_0_OPT]->connect(rotate->getPorts()[(int)rayrotation_rgb::ports_id::IP_3_Z_POSITION]);
-rosunit_roll_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_2]->connect(rotate->getPorts()[(int)rayrotation_rgb::ports_id::IP_4_ROLL]);
-rosunit_pitch_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_3]->connect(rotate->getPorts()[(int)rayrotation_rgb::ports_id::IP_5_PITCH]);
-rosunit_yaw_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_4]->connect(rotate->getPorts()[(int)rayrotation_rgb::ports_id::IP_6_YAW]);
+rosunit_roll_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_0]->connect(rotate->getPorts()[(int)rayrotation_rgb::ports_id::IP_1_ROLL]);
+rosunit_pitch_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_1]->connect(rotate->getPorts()[(int)rayrotation_rgb::ports_id::IP_2_PITCH]);
+rosunit_yaw_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_2]->connect(rotate->getPorts()[(int)rayrotation_rgb::ports_id::IP_3_YAW]);
 
 
 rotate->getPorts()[(int)rayrotation_rgb::ports_id::OP_0_DATA]->connect(rosunit_camera->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
 
-ros::Rate r(200);
+ros::Rate r(30);
 while (ros::ok())
 {
   r.sleep();

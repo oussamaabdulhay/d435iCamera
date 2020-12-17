@@ -39,8 +39,8 @@ public:
     std::vector<cv::KeyPoint> keypoints;
     medianFilter* filter=new medianFilter();
     float point_of_interest;
-    int iLowH = 6;
-    int iHighH = 35;
+    int iLowH = 0;
+    int iHighH = 59;
 
     int iLowS = 164;
     int iHighS = 255;

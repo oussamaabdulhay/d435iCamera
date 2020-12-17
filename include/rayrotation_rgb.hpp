@@ -23,15 +23,11 @@ class rayrotation_rgb: public Block
         Port* _input_port_1;
         Port* _input_port_2;
         Port* _input_port_3;
-        Port* _input_port_4;
-        Port* _input_port_5;
-        Port* _input_port_6;
         Port* _output_port;
     public:
         cv::Point2f ball_location;
         RotationMatrix3by3 R_o_d,R_d_c;
-        ros::Time time;
-        Vector3D<float> drone_position, drone_orientation,U_v,P_b,camera_angle,rotated_unit_vector;
+        Vector3D<float> drone_orientation,U_v,P_b,camera_angle,rotated_unit_vector;
         MatrixXd MultiplyMatrices(MatrixXd R_inertia, MatrixXd R_drone);
         void scale_and_translate();
         FloatMsg z_parameter,y_parameter,x_parameter;
@@ -42,11 +38,11 @@ class rayrotation_rgb: public Block
         void process(DataMsg* t_msg, Port* t_port);
         void update_camera_angles();
         void update_rotation_matrices();
-        rayrotation_rgb();
-        bool x,y;
+        
+
 
         
-         enum ports_id {IP_0_CAMERA, IP_1_X_POSITION,IP_2_Y_POSITION,IP_3_Z_POSITION,IP_4_ROLL,IP_5_PITCH,IP_6_YAW,OP_0_DATA};
-        enum receiving_channels {ch_x, ch_y, ch_z, ch_roll, ch_pitch, ch_yaw,camera,ch_camera_x,ch_camera_y};
+         enum ports_id {IP_0_CAMERA,IP_1_ROLL,IP_2_PITCH,IP_3_YAW,OP_0_DATA};
+         rayrotation_rgb();
         ~rayrotation_rgb();
 };

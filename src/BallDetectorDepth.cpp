@@ -9,7 +9,7 @@ BallDetectorDepth::BallDetectorDepth(ros::NodeHandle &main_nodehandle) : it_(nh_
   image_sub_ = it_.subscribe("/camera/depth/image_rect_raw", 1, &BallDetectorDepth::imageCb, this);
   puby = nh_.advertise<std_msgs::Float32>("camera_provider_y", 1);
   pubx = nh_.advertise<std_msgs::Float32>("camera_provider_x", 1);
-  //cv::namedWindow(OPENCV_WINDOW);
+  cv::namedWindow(OPENCV_WINDOW);
 
   // Filter by Area.
   params.filterByArea = true;
@@ -37,7 +37,7 @@ BallDetectorDepth::BallDetectorDepth(ros::NodeHandle &main_nodehandle) : it_(nh_
 
 BallDetectorDepth::~BallDetectorDepth()
 {
-  //cv::destroyWindow(OPENCV_WINDOW);
+  cv::destroyWindow(OPENCV_WINDOW);
 }
 
 void BallDetectorDepth::imageCb(const sensor_msgs::ImageConstPtr &msg)
@@ -119,20 +119,20 @@ void BallDetectorDepth::imageCb(const sensor_msgs::ImageConstPtr &msg)
     }
   }
 
-  // cv::createTrackbar("LowH", OPENCV_WINDOW, &iLowH, 10000);
-  // cv::createTrackbar("HighH", OPENCV_WINDOW, &iHighH, 10000);
+  cv::createTrackbar("LowH", OPENCV_WINDOW, &iLowH, 10000);
+  cv::createTrackbar("HighH", OPENCV_WINDOW, &iHighH, 10000);
 
-  // cv::createTrackbar("LowS", OPENCV_WINDOW, &iLowS, 256);
-  // cv::createTrackbar("HighS", OPENCV_WINDOW, &iHighS, 256);
+  cv::createTrackbar("LowS", OPENCV_WINDOW, &iLowS, 256);
+  cv::createTrackbar("HighS", OPENCV_WINDOW, &iHighS, 256);
 
-  // cv::createTrackbar("LowV", OPENCV_WINDOW, &iLowV, 256);
-  // cv::createTrackbar("HighV", OPENCV_WINDOW, &iHighV, 256);
+  cv::createTrackbar("LowV", OPENCV_WINDOW, &iLowV, 256);
+  cv::createTrackbar("HighV", OPENCV_WINDOW, &iHighV, 256);
 
-  // cv::imshow("imgOriginal", imgOriginal);
-  // cv::imshow("imgThresholded", imgThresholded);
-  // cv::imshow("im_with_keypoints", im_with_keypoints);
-  // cv::imshow("croppedFrame", croppedFrame);
+  cv::imshow("imgOriginal", imgOriginal);
+  cv::imshow("imgThresholded", imgThresholded);
+  cv::imshow("im_with_keypoints", im_with_keypoints);
+  cv::imshow("croppedFrame", croppedFrame);
 
-  // cv::waitKey(1);
+  cv::waitKey(1);
 }
 

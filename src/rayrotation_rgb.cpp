@@ -7,22 +7,13 @@ rayrotation_rgb::rayrotation_rgb()
     U_v.y = 0;
     U_v.z = 0;
 
-    P_b.x = 0.617673;
-    P_b.y = 0.2373;
-    P_b.z = 1.2239;
-
-    x = false;
-    y = false;
     
     this->_input_port_0 = new InputPort(ports_id::IP_0_CAMERA, this);
-    this->_input_port_1 = new InputPort(ports_id::IP_1_X_POSITION, this);
-    this->_input_port_2 = new InputPort(ports_id::IP_2_Y_POSITION, this);
-    this->_input_port_3 = new InputPort(ports_id::IP_3_Z_POSITION, this);
-    this->_input_port_4 = new InputPort(ports_id::IP_4_ROLL, this);
-    this->_input_port_5 = new InputPort(ports_id::IP_5_PITCH, this);
-    this->_input_port_6 = new InputPort(ports_id::IP_6_YAW, this);
+    this->_input_port_1 = new InputPort(ports_id::IP_1_ROLL, this);
+    this->_input_port_2 = new InputPort(ports_id::IP_2_PITCH, this);
+    this->_input_port_3 = new InputPort(ports_id::IP_3_YAW, this);
     this->_output_port = new OutputPort(ports_id::OP_0_DATA, this);
-    _ports = {_input_port_0, _input_port_1,_input_port_2 ,_input_port_3,_input_port_4,_input_port_5,_input_port_6,_output_port};
+    _ports = {_input_port_0, _input_port_1,_input_port_2 ,_input_port_3,_output_port};
 }
 
 rayrotation_rgb::~rayrotation_rgb()
@@ -39,29 +30,17 @@ void rayrotation_rgb::process(DataMsg* t_msg, Port* t_port) {
         ball_location.y=pixel_location->data.y;
         update_camera_angles();
     }
-    else if(t_port->getID() == ports_id::IP_1_X_POSITION)
-    { 
-        drone_position.x = provider->data.x;
-    }
-    else if(t_port->getID() == ports_id::IP_2_Y_POSITION)
-    { 
-        drone_position.y = provider->data.x;
-    }
-    else if(t_port->getID() == ports_id::IP_3_Z_POSITION)
-    { 
-        drone_position.z = provider->data.z;
-    }
-    else if(t_port->getID() == ports_id::IP_4_ROLL)
+    else if(t_port->getID() == ports_id::IP_1_ROLL)
     { 
         drone_orientation.x =provider->data.x;
     }
-    else if(t_port->getID() == ports_id::IP_5_PITCH)
+    else if(t_port->getID() == ports_id::IP_2_PITCH)
     { 
-        drone_orientation.x =provider->data.x;
+        drone_orientation.y =provider->data.x;
     }
-    else if(t_port->getID() == ports_id::IP_6_YAW)
+    else if(t_port->getID() == ports_id::IP_3_YAW)
     { 
-        drone_orientation.x =provider->data.x;
+        drone_orientation.z =provider->data.x;
     }
 }
 
@@ -99,8 +78,8 @@ Vector3D<float> rayrotation_rgb::Update_unit_vector(MatrixXd rotated_matrix)
  
     
     obj_pos.x=0;
-    obj_pos.y =-1*t_results.y*100;
-    obj_pos.z=-1*t_results.z*100;
+    obj_pos.y=t_results.y * 100 * -1;
+    obj_pos.z=t_results.z * 100 * -1;
 
     Vector3DMsg point_msg;
     point_msg.data = obj_pos;
@@ -109,34 +88,10 @@ Vector3D<float> rayrotation_rgb::Update_unit_vector(MatrixXd rotated_matrix)
     return t_results;
 }
 
-void rayrotation_rgb::scale_and_translate()
-{
-    Vector3D<float> t_results;
-    t_results.x = P_b.x - drone_position.x;
-    t_results.y = P_b.y - drone_position.y;
-    t_results.z = P_b.z - drone_position.z;
-    
-    double t_s = Vector3D<float>::getL2Norm(t_results);
-    
-    rotated_unit_vector.x = t_s * rotated_unit_vector.x;
-    rotated_unit_vector.y = t_s * rotated_unit_vector.y;
-    rotated_unit_vector.z = t_s * rotated_unit_vector.z;
-
-
-
-    rotated_unit_vector.x = rotated_unit_vector.x+drone_position.x;
-    rotated_unit_vector.y = rotated_unit_vector.y+drone_position.y;
-    rotated_unit_vector.z = rotated_unit_vector.z+drone_position.z;
-
-    rotated_unit_vector.x = rotated_unit_vector.x-P_b.x;
-    rotated_unit_vector.y = rotated_unit_vector.y-P_b.y;
-    rotated_unit_vector.z = rotated_unit_vector.z-P_b.z;
-
-}
 
 void rayrotation_rgb::update_camera_angles()
 {
-    float theta_yaw = -(1.2043 / 640.0) * ball_location.x;
+    float theta_yaw =  -1*(1.2043 / 640.0) * ball_location.x;
     float theta_roll = (0.7330 / 480.0) * ball_location.y;
 
     camera_angle.x = theta_roll;
@@ -162,5 +117,4 @@ void rayrotation_rgb::update_rotation_matrices()
 
     rotated_unit_vector = Update_unit_vector(rotated_matrix);
 
-    scale_and_translate();
 }
