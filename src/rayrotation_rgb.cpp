@@ -78,8 +78,8 @@ Vector3D<float> rayrotation_rgb::Update_unit_vector(MatrixXd rotated_matrix)
  
     
     obj_pos.x=0;
-    obj_pos.y=t_results.y * 100 * -1;
-    obj_pos.z=t_results.z * 100 * -1;
+    obj_pos.y=t_results.y * 100;
+    obj_pos.z=t_results.z * 100;
 
     Vector3DMsg point_msg;
     point_msg.data = obj_pos;
@@ -91,8 +91,8 @@ Vector3D<float> rayrotation_rgb::Update_unit_vector(MatrixXd rotated_matrix)
 
 void rayrotation_rgb::update_camera_angles()
 {
-    float theta_yaw =  -1*(1.2043 / 640.0) * ball_location.x;
-    float theta_roll = (0.7330 / 480.0) * ball_location.y;
+    float theta_yaw =  (1.2043 / 640.0) * ball_location.x;
+    float theta_roll = -1*(0.7330 / 480.0) * ball_location.y;
 
     camera_angle.x = theta_roll;
     camera_angle.y = 0;
