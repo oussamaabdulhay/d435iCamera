@@ -46,7 +46,7 @@ public:
     int iHighS = 255;
 
     int iLowV = 50;
-    int iHighV = 210;
+    int iHighV = 238;
 
     enum ports_id {OP_0_DATA};
     void process(DataMsg* t_msg, Port* t_port){};
