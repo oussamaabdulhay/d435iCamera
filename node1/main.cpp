@@ -18,7 +18,7 @@ ROSUnit_Factory ROSUnit_Factory_main{nh_};
 BallDetectorRgb* detection=new BallDetectorRgb(nh_);
 ROSUnit_Optitrack* position_in_z=new ROSUnit_Optitrack(nh_);
 ROSUnit* myROSUnit_Xsens = new ROSUnit_IMU(nh_);
-WrapAroundFunction* wrap_around_yaw = new WrapAroundFunction(-M_PI, M_PI);
+
 
 
 
@@ -26,6 +26,9 @@ WrapAroundFunction* wrap_around_yaw = new WrapAroundFunction(-M_PI, M_PI);
 ROSUnit* rosunit_camera = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher,
                                                                   ROSUnit_msg_type::ROSUnit_Point,
                                                                   "/camera_provider");
+ROSUnit* rosunit_yaw_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
+                                                                  ROSUnit_msg_type::ROSUnit_Point,
+                                                                  "/providers/yaw");
                                                                 
 
 // rayrotation_rgb* rotate = new rayrotation_rgb();
@@ -42,7 +45,7 @@ pixeltometer* locate = new pixeltometer();
 detection->getPorts()[(int)BallDetectorRgb::ports_id::OP_0_DATA]->connect(locate->getPorts()[(int)pixeltometer::ports_id::IP_0_CAMERA]);
 myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_0_ROLL]->connect(locate->getPorts()[(int)pixeltometer::ports_id::IP_1_ROLL]);
 myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_1_PITCH]->connect(locate->getPorts()[(int)pixeltometer::ports_id::IP_2_PITCH]);
-wrap_around_yaw->getPorts()[(int)WrapAroundFunction::ports_id::OP_0_DATA]->connect(locate->getPorts()[(int)pixeltometer::ports_id::IP_3_YAW]);
+rosunit_yaw_provider->getPorts()[(int)WrapAroundFunction::ports_id::OP_0_DATA]->connect(locate->getPorts()[(int)pixeltometer::ports_id::IP_3_YAW]);
 
 
 locate->getPorts()[(int)pixeltometer::ports_id::OP_0_DATA]->connect(rosunit_camera->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
