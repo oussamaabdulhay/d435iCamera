@@ -1,6 +1,16 @@
 #include "pixeltometer.hpp"
 using namespace std;
 
+//Current camera orientation with respect to the drone frame
+//               
+//                      y-axis                   
+//                    ^ 
+//                    |                     
+//                    |       
+//    (z upwards)     *----> x-axis 
+
+
+
 pixeltometer::pixeltometer()
 {
     depth=1.58;
