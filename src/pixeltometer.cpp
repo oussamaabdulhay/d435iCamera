@@ -3,11 +3,11 @@ using namespace std;
 
 //Current camera orientation with respect to the drone frame
 //               
-//                      y-axis                   
+//                      z-axis                   
 //                    ^ 
 //                    |                     
 //                    |       
-//    (z upwards)     *----> x-axis 
+//    (y inwards)     +----> x-axis 
 
 
 
@@ -73,9 +73,9 @@ Vector3D<float> pixeltometer::update_location(Vector3D<float> object_location)
 
 void pixeltometer::convert_pixel_to_meters()
 {
-    object_location.x=depth;
-    object_location.y=(ball_location.x*depth)/f_y;
-    object_location.z=(ball_location.y*depth)/f_x;
+    object_location.x=(ball_location.x*depth)/f_x;
+    object_location.y=depth;
+    object_location.z=(ball_location.y*depth)/f_y;
     
 
     this->update_location(object_location);
