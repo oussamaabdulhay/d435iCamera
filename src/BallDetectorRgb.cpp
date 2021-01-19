@@ -18,20 +18,20 @@ BallDetectorRgb::BallDetectorRgb(ros::NodeHandle &main_nodehandle)
   cv::namedWindow(OPENCV_WINDOW);
 
   params.filterByArea = true;
-  params.minArea = 500;
-  params.maxArea = 2500;
+  params.minArea = 1000;
+  params.maxArea = 5000;
 
   // Filter by Circularity
   params.filterByCircularity = false;
-  params.minCircularity = 0.5;
+  params.minCircularity = 0.7;
 
   // Filter by Convexity
   params.filterByConvexity = false;
-  params.minConvexity = 0.3;
+  params.minConvexity = 0.6;
 
   // Filter by Inertia
   params.filterByInertia = false;
-  params.minInertiaRatio = 0.3;
+  params.minInertiaRatio = 0.6;
 
   threshold = 10;
 }

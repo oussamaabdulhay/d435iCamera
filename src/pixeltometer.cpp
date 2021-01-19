@@ -13,7 +13,7 @@ using namespace std;
 
 pixeltometer::pixeltometer()
 {
-    depth=1.58;
+    depth=2.93;
     f_x=616.437;
     f_y=616.65;
 

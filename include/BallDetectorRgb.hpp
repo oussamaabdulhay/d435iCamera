@@ -40,12 +40,12 @@ public:
     medianFilter* filter=new medianFilter();
     float point_of_interest;
     int iLowH = 0;
-    int iHighH = 59;
+    int iHighH = 57;
 
-    int iLowS = 164;
+    int iLowS = 133;
     int iHighS = 255;
 
-    int iLowV = 50;
+    int iLowV = 139;
     int iHighV = 238;
 
     enum ports_id {OP_0_DATA};
