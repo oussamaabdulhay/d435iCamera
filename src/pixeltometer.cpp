@@ -73,8 +73,8 @@ Vector3D<float> pixeltometer::update_location(Vector3D<float> object_location)
 
 void pixeltometer::convert_pixel_to_meters()
 {
-    object_location.x=(ball_location.x*depth)/f_x;
-    object_location.y=depth;
+    object_location.x=depth;
+    object_location.y=(ball_location.x*depth)/f_x;
     object_location.z=(ball_location.y*depth)/f_y;
     
 

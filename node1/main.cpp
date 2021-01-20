@@ -45,7 +45,7 @@ pixeltometer* locate = new pixeltometer();
 detection->getPorts()[(int)BallDetectorRgb::ports_id::OP_0_DATA]->connect(locate->getPorts()[(int)pixeltometer::ports_id::IP_0_CAMERA]);
 myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_0_ROLL]->connect(locate->getPorts()[(int)pixeltometer::ports_id::IP_1_ROLL]);
 myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_1_PITCH]->connect(locate->getPorts()[(int)pixeltometer::ports_id::IP_2_PITCH]);
-rosunit_yaw_provider->getPorts()[(int)WrapAroundFunction::ports_id::OP_0_DATA]->connect(locate->getPorts()[(int)pixeltometer::ports_id::IP_3_YAW]);
+rosunit_yaw_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_0]->connect(locate->getPorts()[(int)pixeltometer::ports_id::IP_3_YAW]);
 
 
 locate->getPorts()[(int)pixeltometer::ports_id::OP_0_DATA]->connect(rosunit_camera->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
