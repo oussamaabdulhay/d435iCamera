@@ -44,7 +44,7 @@ void rayrotation_rgb::process(DataMsg* t_msg, Port* t_port) {
     }
 }
 
-MatrixXd rayrotation_rgb::MultiplyMatrices(MatrixXd R_inertia, MatrixXd R_drone)
+Eigen::Matrix<float, 3, 3> rayrotation_rgb::MultiplyMatrices(Eigen::Matrix<float, 3, 3> R_inertia, Eigen::Matrix<float, 3, 3> R_drone)
 {
 
     MatrixXd rotated_matrix(3, 3);
@@ -104,14 +104,14 @@ void rayrotation_rgb::update_camera_angles()
 void rayrotation_rgb::update_rotation_matrices()    
 {
 
-    MatrixXd R_drone(3, 3);
-    MatrixXd R_inertia(3, 3);
-    MatrixXd rotated_matrix(3, 3);
+    Eigen::Matrix<float, 3, 3> R_drone(3, 3);
+    Eigen::Matrix<float, 3, 3> R_inertia(3, 3);
+    Eigen::Matrix<float, 3, 3> rotated_matrix(3, 3);
 
     R_inertia = R_o_d.Update(drone_orientation); //Create the rotation matrices
     R_drone = R_d_c.Update(camera_angle);
 
-    R_inertia=R_inertia.inverse();
+    //R_inertia=R_inertia.inverse();
 
     rotated_matrix = MultiplyMatrices(R_inertia, R_drone); //Multiply the rotation matrices;
 

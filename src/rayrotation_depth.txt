@@ -66,10 +66,10 @@ void rayrotation_depth::process(DataMsg* t_msg, Port* t_port) {
     }
 }
 
-MatrixXd rayrotation_depth::MultiplyMatrices(MatrixXd R_inertia, MatrixXd R_drone)
+Eigen::Matrix<float, 3, 3> rayrotation_depth::MultiplyMatrices(Eigen::Matrix<float, 3, 3> R_inertia, Eigen::Matrix<float, 3, 3> R_drone)
 {
 
-    MatrixXd rotated_matrix(3, 3);
+    Eigen::Matrix<float, 3, 3> rotated_matrix(3, 3);
     rotated_matrix(0, 0) = R_drone(0, 0) * R_inertia(0, 0) + R_drone(0, 1) * R_inertia(1, 0) + R_drone(0, 2) * R_inertia(2, 0);
 
     rotated_matrix(1, 0) = R_drone(1, 0) * R_inertia(0, 0) + R_drone(1, 1) * R_inertia(1, 0) + R_drone(1, 2) * R_inertia(2, 0);
@@ -90,7 +90,7 @@ MatrixXd rayrotation_depth::MultiplyMatrices(MatrixXd R_inertia, MatrixXd R_dron
     return rotated_matrix;
 }
 
-Vector3D<float> rayrotation_depth::Update_unit_vector(MatrixXd rotated_matrix)
+Vector3D<float> rayrotation_depth::Update_unit_vector(Eigen::Matrix<float, 3, 3> rotated_matrix)
 {
     Vector3D<float> t_results;
     t_results.x = U_v.x * rotated_matrix(0, 0) + U_v.y * rotated_matrix(0, 1) + U_v.z * rotated_matrix(0, 2);
@@ -149,9 +149,9 @@ void rayrotation_depth::update_camera_angles()
 void rayrotation_depth::update_rotation_matrices()    
 {
 
-    MatrixXd R_drone(3, 3);
-    MatrixXd R_inertia(3, 3);
-    MatrixXd rotated_matrix(3, 3);
+    Eigen::Matrix<float, 3, 3> R_drone(3, 3);
+    Eigen::Matrix<float, 3, 3> R_inertia(3, 3);
+    Eigen::Matrix<float, 3, 3> rotated_matrix(3, 3);
 
     R_inertia = R_o_d.Update(drone_orientation); //Create the rotation matrices
     R_drone = R_d_c.Update(camera_angle);

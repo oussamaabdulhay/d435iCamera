@@ -1,5 +1,5 @@
 #pragma once
-#include "RotationMatrix3by3.hpp"
+#include "HEAR_math/RotationMatrix3by3.hpp"
 #include <opencv2/core/types.hpp>
 #include <iostream>
 #include "std_msgs/UInt64.h"
@@ -33,13 +33,13 @@ class rayrotation_depth: public Block
         RotationMatrix3by3 R_o_d,R_d_c;
         ros::Time time;
         Vector3D<float> drone_position, drone_orientation,U_v,P_b,camera_angle,rotated_unit_vector;
-        MatrixXd MultiplyMatrices(MatrixXd R_inertia, MatrixXd R_drone);
+        Eigen::Matrix<float, 3, 3> MultiplyMatrices(Eigen::Matrix<float, 3, 3> R_inertia, Eigen::Matrix<float, 3, 3> R_drone);
         void scale_and_translate();
         FloatMsg z_parameter,y_parameter,x_parameter;
         Vector3DMsg camera_parameters;
         Vector3DMsg all_parameters;
         Vector3D<float> obj_pos;
-        Vector3D<float> Update_unit_vector(MatrixXd);
+        Vector3D<float> Update_unit_vector(Eigen::Matrix<float, 3, 3>);
         void process(DataMsg* t_msg, Port* t_port);
         void update_camera_angles();
         void update_rotation_matrices();

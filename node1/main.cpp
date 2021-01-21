@@ -1,8 +1,8 @@
 #include <ros/ros.h>
 #include <iostream>
 #include "BallDetectorRgb.hpp"
-#include "rayrotation_rgb.hpp"
-#include "pixeltometer.hpp"
+//#include "rayrotation_rgb.hpp"
+//#include "pixeltometer.hpp"
 #include <opencv2/core/types.hpp>
 #include "HEAR_ROS_BRIDGE/ROSUnit_Factory.hpp"
 #include "ROSUnit_Optitrack.hpp"
@@ -40,15 +40,15 @@ ROSUnit* rosunit_yaw_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx
 
 // rotate->getPorts()[(int)rayrotation_rgb::ports_id::OP_0_DATA]->connect(rosunit_camera->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
 
-pixeltometer* locate = new pixeltometer();
+//pixeltometer* locate = new pixeltometer();
 
-detection->getPorts()[(int)BallDetectorRgb::ports_id::OP_0_DATA]->connect(locate->getPorts()[(int)pixeltometer::ports_id::IP_0_CAMERA]);
-myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_0_ROLL]->connect(locate->getPorts()[(int)pixeltometer::ports_id::IP_1_ROLL]);
-myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_1_PITCH]->connect(locate->getPorts()[(int)pixeltometer::ports_id::IP_2_PITCH]);
-rosunit_yaw_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_0]->connect(locate->getPorts()[(int)pixeltometer::ports_id::IP_3_YAW]);
+// detection->getPorts()[(int)BallDetectorRgb::ports_id::OP_0_DATA]->connect(locate->getPorts()[(int)pixeltometer::ports_id::IP_0_CAMERA]);
+// myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_0_ROLL]->connect(locate->getPorts()[(int)pixeltometer::ports_id::IP_1_ROLL]);
+// myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_1_PITCH]->connect(locate->getPorts()[(int)pixeltometer::ports_id::IP_2_PITCH]);
+// rosunit_yaw_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_0]->connect(locate->getPorts()[(int)pixeltometer::ports_id::IP_3_YAW]);
 
 
-locate->getPorts()[(int)pixeltometer::ports_id::OP_0_DATA]->connect(rosunit_camera->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
+//locate->getPorts()[(int)pixeltometer::ports_id::OP_0_DATA]->connect(rosunit_camera->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
 
 ros::Rate r(60);
 while (ros::ok())

@@ -1,5 +1,5 @@
 #pragma once
-#include "RotationMatrix3by3.hpp"
+#include "HEAR_math/RotationMatrix3by3.hpp"
 #include <opencv2/core/types.hpp>
 #include <iostream>
 #include "std_msgs/UInt64.h"

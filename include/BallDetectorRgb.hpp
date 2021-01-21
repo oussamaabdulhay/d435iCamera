@@ -42,11 +42,11 @@ public:
     int iLowH = 0;
     int iHighH = 57;
 
-    int iLowS = 133;
+    int iLowS = 58;
     int iHighS = 255;
 
-    int iLowV = 139;
-    int iHighV = 238;
+    int iLowV = 125;
+    int iHighV = 255;
 
     enum ports_id {OP_0_DATA};
     void process(DataMsg* t_msg, Port* t_port){};
