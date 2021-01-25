@@ -15,7 +15,7 @@ BallDetectorRgb::BallDetectorRgb(ros::NodeHandle &main_nodehandle)
   // puby = nh_.advertise<std_msgs::Float32>("camera_provider_y", 1);
   // pubx = nh_.advertise<std_msgs::Float32>("camera_provider_x", 1);
   
-  cv::namedWindow(OPENCV_WINDOW);
+  //cv::namedWindow(OPENCV_WINDOW);
 
   params.filterByArea = true;
   params.minArea = 800;
@@ -38,7 +38,7 @@ BallDetectorRgb::BallDetectorRgb(ros::NodeHandle &main_nodehandle)
 
 BallDetectorRgb::~BallDetectorRgb()
 {
-    cv::destroyWindow(OPENCV_WINDOW);
+    //cv::destroyWindow(OPENCV_WINDOW);
 }
 
 void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
