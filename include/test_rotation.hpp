@@ -1,5 +1,5 @@
 #pragma once
-#include "HEAR_math/RotationMatrix3by3.hpp"
+#include "HEAR_math/RotationMatrix3by3_camera.hpp"
 #include <iostream>
 #include <math.h>
 #include <eigen3/Eigen/Dense>
@@ -26,7 +26,7 @@ class test_rotation: public Block
         Port* _output_port_2;
     public:
         Vector2D<float> ball_location;
-        RotationMatrix3by3 R_i_d,R_d_c;
+        RotationMatrix3by3_camera R_i_d,R_d_c;
         Vector3D<float> drone_orientation,U_v,camera_angle,rotated_unit_vector;
         MatrixXd MultiplyMatrices(MatrixXd R_1, MatrixXd R_2);
         void scale_and_translate();
