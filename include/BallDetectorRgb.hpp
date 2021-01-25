@@ -5,10 +5,10 @@
 #include <opencv2/features2d.hpp>
 #include <image_transport/image_transport.h>
 #include <cmath>
-#include "std_msgs/Float32.h"
-#include "std_msgs/Int32.h"
-#include "std_msgs/UInt32.h"
-#include "std_msgs/UInt64.h"
+// #include "std_msgs/Float32.h"
+// #include "std_msgs/Int32.h"
+// #include "std_msgs/UInt32.h"
+// #include "std_msgs/UInt64.h"
 #include "geometry_msgs/Point.h"
 #include <sstream>
 #include <ros/ros.h>
@@ -42,10 +42,10 @@ public:
     int iLowH = 0;
     int iHighH = 57;
 
-    int iLowS = 58;
+    int iLowS = 59;
     int iHighS = 255;
 
-    int iLowV = 125;
+    int iLowV = 124;
     int iHighV = 255;
 
     enum ports_id {OP_0_DATA};

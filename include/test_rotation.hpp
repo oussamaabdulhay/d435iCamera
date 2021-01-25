@@ -1,14 +1,12 @@
 #pragma once
 #include "HEAR_math/RotationMatrix3by3.hpp"
-#include <opencv2/core/types.hpp>
 #include <iostream>
-#include "std_msgs/UInt64.h"
 #include <math.h>
 #include <eigen3/Eigen/Dense>
 #include <ros/ros.h>
 #include "HEAR_math/Matrix3by3.hpp"
-#include "HEAR_msg/FloatMsg.hpp"
 #include "HEAR_math/Vector3D.hpp"
+#include "HEAR_math/Vector2D.hpp"
 #include "HEAR_msg/Vector2DMsg.hpp"
 #include "HEAR_msg/Vector3DMsg.hpp"
 #include "HEAR_core/InputPort.hpp"
@@ -27,7 +25,7 @@ class test_rotation: public Block
         Port* _output_port_1;
         Port* _output_port_2;
     public:
-        cv::Point2f ball_location;
+        Vector2D<float> ball_location;
         RotationMatrix3by3 R_i_d,R_d_c;
         Vector3D<float> drone_orientation,U_v,camera_angle,rotated_unit_vector;
         MatrixXd MultiplyMatrices(MatrixXd R_1, MatrixXd R_2);
@@ -43,7 +41,7 @@ class test_rotation: public Block
 
 
         
-         enum ports_id {IP_0_CAMERA,IP_1_ROLL,IP_2_PITCH,IP_3_YAW,OP_0_DATA, OP_CA_B_DATA, OP_CA_A_DATA};
+         enum ports_id {IP_0_CAMERA,IP_1_ROLL,IP_2_PITCH,IP_3_YAW,OP_0_DATA, OP_CAMERA_ANGLES_DATA, OP_PIXEL_DATA};
          test_rotation();
         ~test_rotation();
 };

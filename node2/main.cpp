@@ -28,7 +28,10 @@ ROSUnit* rosunit_camera = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type:
                                                                   "/camera_provider");
 ROSUnit* rosunit_camera_before_rotation = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher,
                                                                   ROSUnit_msg_type::ROSUnit_Point,
-                                                                  "/camera_angles_before_rotation");
+                                                                  "/camera_angles_rotation");
+ROSUnit* rosunit_pixel = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher,
+                                                                  ROSUnit_msg_type::ROSUnit_Point,
+                                                                  "/pixel_data");
 ROSUnit* rosunit_servoing_object_position = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher,
                                                                   ROSUnit_msg_type::ROSUnit_Point,
                                                                   "/servoing_object_position");
@@ -47,7 +50,8 @@ myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_1_PITCH]->connect(loc
 rosunit_yaw_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_0]->connect(locate->getPorts()[(int)test_rotation::ports_id::IP_3_YAW]);
 
 locate->getPorts()[(int)test_rotation::ports_id::OP_0_DATA]->connect(rosunit_camera->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
-locate->getPorts()[(int)test_rotation::ports_id::OP_CA_B_DATA]->connect(rosunit_camera_before_rotation->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
+locate->getPorts()[(int)test_rotation::ports_id::OP_CAMERA_ANGLES_DATA]->connect(rosunit_camera_before_rotation->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
+locate->getPorts()[(int)test_rotation::ports_id::OP_PIXEL_DATA]->connect(rosunit_pixel->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
 
 plane_line_intersector* estimate = new plane_line_intersector();
 
@@ -57,7 +61,7 @@ rosunit_depth->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_1]->connect(estima
 estimate->getPorts()[(int)plane_line_intersector::ports_id::OP_0_DATA]->connect(rosunit_servoing_object_position->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
 
 
-ros::Rate r(60);
+ros::Rate r(70);
 while (ros::ok())
 {
   r.sleep();

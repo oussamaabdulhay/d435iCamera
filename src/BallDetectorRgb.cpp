@@ -12,10 +12,10 @@ BallDetectorRgb::BallDetectorRgb(ros::NodeHandle &main_nodehandle)
 
   image_sub_ = it_.subscribe("/camera/color/image_raw", 1,&BallDetectorRgb::imageCb, this);
     
-  puby = nh_.advertise<std_msgs::Float32>("camera_provider_y", 1);
-  pubx = nh_.advertise<std_msgs::Float32>("camera_provider_x", 1);
+  // puby = nh_.advertise<std_msgs::Float32>("camera_provider_y", 1);
+  // pubx = nh_.advertise<std_msgs::Float32>("camera_provider_x", 1);
   
-  //cv::namedWindow(OPENCV_WINDOW);
+  cv::namedWindow(OPENCV_WINDOW);
 
   params.filterByArea = true;
   params.minArea = 800;
@@ -38,7 +38,7 @@ BallDetectorRgb::BallDetectorRgb(ros::NodeHandle &main_nodehandle)
 
 BallDetectorRgb::~BallDetectorRgb()
 {
-    //cv::destroyWindow(OPENCV_WINDOW);
+    cv::destroyWindow(OPENCV_WINDOW);
 }
 
 void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
@@ -73,15 +73,15 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
     cv::bitwise_not(imgThresholded, imgThresholded);
     cv::Ptr<cv::SimpleBlobDetector> detector = cv::SimpleBlobDetector::create(params);
     detector->detect(imgThresholded, keypoints);
-    cv::drawKeypoints(imgThresholded, keypoints, im_with_keypoints, cv::Scalar(128, 0, 0), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-    std_msgs::Float32 msg_y;
-    std_msgs::Float32 msg_x;
+    // cv::drawKeypoints(imgThresholded, keypoints, im_with_keypoints, cv::Scalar(128, 0, 0), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+    // std_msgs::Float32 msg_y;
+    // std_msgs::Float32 msg_x;
     std::cout<<keypoints.size()<<std::endl;
   if (keypoints.size() == 0)
   {
     std::cout << "EMPTY KEYPOINTS\n";
-    puby.publish(msg_y);
-    pubx.publish(msg_x);
+    // puby.publish(msg_y);
+    // pubx.publish(msg_x);
     Vector2DMsg output_msg;
     output_msg.data = obj_pos;
     this->_output_port->receiveMsgData((DataMsg*) &output_msg);
@@ -100,26 +100,25 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
       {
         _c_.x = temp.back().x;
         _c_.y = temp.back().y;
-        msg_y.data = _c_.y - 240;
-        msg_x.data = _c_.x - 320;
+        // msg_y.data = _c_.y - 240;
+        // msg_x.data = _c_.x - 320;
         obj_pos.y = _c_.y-240;
         obj_pos.x = _c_.x-320;
         Vector2DMsg output_msg;
         output_msg.data = obj_pos;
         this->_output_port->receiveMsgData((DataMsg*) &output_msg);
-        puby.publish(msg_y);
-        pubx.publish(msg_x);
+        // puby.publish(msg_y);
+        // pubx.publish(msg_x);
       }
 
       else
       {
         //std::cout << "standard dev too high\n";
         _c_ = filter->getMedian(temp, _c_);
-        msg_y.data = _c_.y - 240;
-        msg_x.data = _c_.x - 320;
-        point_of_interest = sqrt((pow(_c_.x, 2)) + (_c_.y, 2));
-        puby.publish(msg_y);
-        pubx.publish(msg_x);
+        // msg_y.data = _c_.y - 240;
+        // msg_x.data = _c_.x - 320;
+        // puby.publish(msg_y);
+        // pubx.publish(msg_x);
         obj_pos.y = _c_.y-240;
         obj_pos.x = _c_.x-320;
         Vector2DMsg output_msg;

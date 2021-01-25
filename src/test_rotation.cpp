@@ -13,8 +13,8 @@ test_rotation::test_rotation()
     this->_input_port_2 = new InputPort(ports_id::IP_2_PITCH, this);
     this->_input_port_3 = new InputPort(ports_id::IP_3_YAW, this);
     this->_output_port_0 = new OutputPort(ports_id::OP_0_DATA, this);
-    this->_output_port_1 = new OutputPort(ports_id::OP_CA_B_DATA, this);
-    this->_output_port_2 = new OutputPort(ports_id::OP_CA_A_DATA, this);
+    this->_output_port_1 = new OutputPort(ports_id::OP_CAMERA_ANGLES_DATA, this);
+    this->_output_port_2 = new OutputPort(ports_id::OP_PIXEL_DATA, this);
     _ports = {_input_port_0, _input_port_1,_input_port_2 ,_input_port_3,_output_port_0, _output_port_1, _output_port_2};
 }
 
@@ -28,11 +28,15 @@ void test_rotation::process(DataMsg* t_msg, Port* t_port) {
     if(t_port->getID() == ports_id::IP_0_CAMERA)
     {
         Vector2DMsg* pixel_location = (Vector2DMsg*) t_msg;
-        ball_location.x=-1* pixel_location->data.x;
+        ball_location.x=-1 * pixel_location->data.x;
         ball_location.y= pixel_location->data.y;
-        //std::cout<<"ball_location.x = "<<ball_location.x<<std::endl;
-        //std::cout<<"ball_location.y = "<<ball_location.y<<std::endl;
+
         update_camera_angles();
+
+        Vector2DMsg pixel_data_raw_msg;
+        pixel_data_raw_msg.data = ball_location;
+        this->_output_port_2->receiveMsgData(&pixel_data_raw_msg);
+        
     }
     else if(t_port->getID() == ports_id::IP_1_ROLL)
     { 

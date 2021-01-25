@@ -62,8 +62,14 @@ void plane_line_intersector::process(DataMsg* t_msg, Port* t_port) {
   
     Vector3D<double> intersection_pt= projection_plane.getIntersectingLine(line_p1,line_p2);
 
+    Vector3D<double> data_transmitted;
+
+    data_transmitted.x=-1 * intersection_pt.x;
+    data_transmitted.y=intersection_pt.y;
+    data_transmitted.z=-1 * intersection_pt.z;
+
     Vector3DMsg point_msg;
-    point_msg.data = intersection_pt;
+    point_msg.data = data_transmitted;
     this->_output_port_0->receiveMsgData(&point_msg);
 
 
