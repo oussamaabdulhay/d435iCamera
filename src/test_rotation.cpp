@@ -119,6 +119,9 @@ void test_rotation::update_rotation_matrices()
     R_i_d_temp = R_i_d.Update(drone_orientation); //Create the rotation matrices
     R_d_c_temp = R_d_c.Update(camera_angle);
 
+    R_i_d_temp=R_i_d_temp.inverse();
+    R_d_c_temp=R_d_c_temp.inverse();
+    
     //R_d_c_temp=R_d_c_temp.transpose().eval();
     rotated_matrix = MultiplyMatrices(R_i_d_temp, R_d_c_temp); //Multiply the rotation matrices;
     //std::cout<<"PITCH - cam=  "<<camera_angle.y<<std::endl;
