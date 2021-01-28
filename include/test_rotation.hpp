@@ -24,18 +24,18 @@ class test_rotation: public Block
         Port* _output_port_0;
         Port* _output_port_1;
         Port* _output_port_2;
+
+         float f_c;
     public:
         Vector2D<float> ball_location;
         RotationMatrix3by3 R_i_d,R_d_c;
-        Vector3D<float> drone_orientation,U_v,camera_angle,rotated_unit_vector;
-        MatrixXd MultiplyMatrices(MatrixXd R_1, MatrixXd R_2);
+        Vector3D<float> drone_orientation,camera_vector,rotated_unit_vector;
         void scale_and_translate();
         Vector3DMsg camera_parameters;
-        Vector3DMsg all_parameters;
         Vector3D<float> obj_pos;
-        void Update_unit_vector(MatrixXd);
+        void Update_unit_vector(Eigen::Matrix<float,3,3>);
         void process(DataMsg* t_msg, Port* t_port);
-        void update_camera_angles();
+        void update_camera_vector();
         void update_rotation_matrices();
         
 
