@@ -29,8 +29,9 @@ class test_rotation: public Block
     public:
         Vector2D<float> ball_location;
         RotationMatrix3by3 R_i_d,R_d_c;
-        Vector3D<float> drone_orientation,camera_vector,rotated_unit_vector;
+        Vector3D<float> drone_orientation,camera_angle,rotated_unit_vector,U_v;
         void scale_and_translate();
+        Eigen::Matrix<float, 3, 3> MultiplyMatrices(Eigen::Matrix<float, 3, 3> R_1, Eigen::Matrix<float, 3, 3> R_2);
         Vector3DMsg camera_parameters;
         Vector3D<float> obj_pos;
         void Update_unit_vector(Eigen::Matrix<float,3,3>);
