@@ -49,35 +49,13 @@ void test_rotation::process(DataMsg* t_msg, Port* t_port) {
     }
 }
 
-Eigen::Matrix<float, 3, 3> test_rotation::MultiplyMatrices(Eigen::Matrix<float, 3, 3> R_1, Eigen::Matrix<float, 3, 3> R_2)
-{
-    Eigen::Matrix<float, 3, 3> rotated_matrix;
-    rotated_matrix(0, 0) = R_1(0, 0) * R_2(0, 0) + R_1(0, 1) * R_2(1, 0) + R_1(0, 2) * R_2(2, 0);
-
-    rotated_matrix(1, 0) = R_1(1, 0) * R_2(0, 0) + R_1(1, 1) * R_2(1, 0) + R_1(1, 2) * R_2(2, 0);
-
-    rotated_matrix(2, 0) = R_1(2, 0) * R_2(0, 0) + R_1(2, 1) * R_2(1, 0) + R_1(2, 2) * R_2(2, 0);
-
-    rotated_matrix(0, 1) = R_1(0, 0) * R_2(0, 1) + R_1(0, 1) * R_2(1, 1) + R_1(0, 2) * R_2(2, 1);
-
-    rotated_matrix(1, 1) = R_1(1, 0) * R_2(0, 1) + R_1(1, 1) * R_2(1, 1) + R_1(1, 2) * R_2(2, 1);
-
-    rotated_matrix(2, 1) = R_1(2, 0) * R_2(0, 1) + R_1(2, 1) * R_2(1, 1) + R_1(2, 2) * R_2(2, 1);
-
-    rotated_matrix(0, 2) = R_1(0, 0) * R_2(0, 2) + R_1(0, 1) * R_2(1, 2) + R_1(0, 2) * R_2(2, 2);
-
-    rotated_matrix(1, 2) = R_1(1, 0) * R_2(0, 2) + R_1(1, 1) * R_2(1, 2) + R_1(1, 2) * R_2(2, 2);
-
-    rotated_matrix(2, 2) = R_1(2, 0) * R_2(0, 2) + R_1(2, 1) * R_2(1, 2) + R_1(2, 2) * R_2(2, 2);
-    return rotated_matrix;
-}
 
 void test_rotation::Update_unit_vector(Eigen::Matrix<float,3,3> rotated_matrix)
 {
     Vector3D<float> t_results;
-    t_results.x = U_v.x * rotated_matrix(0, 0) + U_v.y * rotated_matrix(0, 1) + U_v.z * rotated_matrix(0, 2);
-    t_results.y = U_v.x * rotated_matrix(1, 0) + U_v.y * rotated_matrix(1, 1) + U_v.z * rotated_matrix(1, 2);
-    t_results.z = U_v.x * rotated_matrix(2, 0) + U_v.y * rotated_matrix(2, 1) + U_v.z * rotated_matrix(2, 2);
+    t_results.x = camera_vector.x * rotated_matrix(0, 0) + camera_vector.y * rotated_matrix(0, 1) + camera_vector.z * rotated_matrix(0, 2);
+    t_results.y = camera_vector.x * rotated_matrix(1, 0) + camera_vector.y * rotated_matrix(1, 1) + camera_vector.z * rotated_matrix(1, 2);
+    t_results.z = camera_vector.x * rotated_matrix(2, 0) + camera_vector.y * rotated_matrix(2, 1) + camera_vector.z * rotated_matrix(2, 2);
 
  
     
@@ -93,36 +71,24 @@ void test_rotation::Update_unit_vector(Eigen::Matrix<float,3,3> rotated_matrix)
 
 void test_rotation::update_camera_vector()
 {
-    float theta_yaw =  (1.2043 / 640.0) * ball_location.x;
-    float theta_pitch = (0.7330 / 480.0) * ball_location.y;
+    camera_vector.x = f_c;
+    camera_vector.y = ball_location.x;
+    camera_vector.z = ball_location.y;
 
-    camera_angle.x = 0;
-    camera_angle.y = theta_pitch;
-    camera_angle.z = theta_yaw;
-
-    Vector3DMsg camera_angles_raw_msg;
-    camera_angles_raw_msg.data = camera_angle;
-    this->_output_port_1->receiveMsgData(&camera_angles_raw_msg);
+    Vector3DMsg camera_vector_raw_msg;
+    camera_vector_raw_msg.data = camera_vector;
+    this->_output_port_1->receiveMsgData(&camera_vector_raw_msg);
 
     this->update_rotation_matrices();
 }
 
 void test_rotation::update_rotation_matrices()    
 {
-    Eigen::Matrix<float, 3, 3> R_d_c_temp(3, 3);
     Eigen::Matrix<float, 3, 3> R_i_d_temp(3, 3);
-    Eigen::Matrix<float, 3, 3> rotated_matrix(3, 3);
 
     R_i_d_temp = R_i_d.Update(drone_orientation); //Create the rotation matrices
-    R_d_c_temp = R_d_c.Update(camera_angle);
 
-    R_i_d_temp=R_i_d_temp.transpose().eval();
-    R_d_c_temp=R_d_c_temp.transpose().eval();
-    
-    //R_d_c_temp=R_d_c_temp.transpose().eval();
-    rotated_matrix = MultiplyMatrices(R_i_d_temp, R_d_c_temp); //Multiply the rotation matrices;
-    //std::cout<<"PITCH - cam=  "<<camera_angle.y<<std::endl;
-    //std::cout<<"PITCH - drne= "<<drone_orientation.y<<std::endl;
-    // std::cout<<"YAW="<<drone_orientation.z<<std::endl;
-    this->Update_unit_vector(rotated_matrix);
+    R_i_d_temp=R_i_d_temp.inverse().eval();
+
+    this->Update_unit_vector(R_i_d_temp);
 }
