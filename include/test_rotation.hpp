@@ -14,6 +14,13 @@
 #include "HEAR_core/Block.hpp"
 using Eigen::MatrixXd;
 
+//The current resolution being used in the camera is 640 x 480. (60fps)
+//the intrinsic camera matrix is =[ 616.437  0.0        319.82  ]
+//                                [ 0.0     616.655     241.773 ]
+//                                [ 0.0     0.0         1.0     ]
+
+//using the matrix above the Horizantal field of view is 54.8429 degrees (0.9572 rad) and the Vertical field of view is 42.817 degrees (0.7473 rad).
+
 class test_rotation: public Block
 {
     private:
