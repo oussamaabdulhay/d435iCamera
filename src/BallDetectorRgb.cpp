@@ -73,7 +73,7 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
     cv::bitwise_not(imgThresholded, imgThresholded);
     cv::Ptr<cv::SimpleBlobDetector> detector = cv::SimpleBlobDetector::create(params);
     detector->detect(imgThresholded, keypoints);
-    // cv::drawKeypoints(imgThresholded, keypoints, im_with_keypoints, cv::Scalar(128, 0, 0), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+    cv::drawKeypoints(imgThresholded, keypoints, im_with_keypoints, cv::Scalar(128, 0, 0), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
     // std_msgs::Float32 msg_y;
     // std_msgs::Float32 msg_x;
     std::cout<<keypoints.size()<<std::endl;

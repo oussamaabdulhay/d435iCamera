@@ -44,33 +44,33 @@ void plane_line_intersector::process(DataMsg* t_msg, Port* t_port) {
     else if(t_port->getID() == ports_id::IP_1_DEPTH_DATA) //TODO: Caution about update rate
     { 
         depth=provider->data.x;
-
+        
         double current_depth;
 
         Vector3D<double> line_p1,line_p2;
     
-    projection_plane.p0.y=inertial_plane_offset-depth;
-    projection_plane.p1.y=inertial_plane_offset-depth;
-    projection_plane.p2.y=inertial_plane_offset-depth;
+        projection_plane.p0.y=inertial_plane_offset-depth;
+        projection_plane.p1.y=inertial_plane_offset-depth;
+        projection_plane.p2.y=inertial_plane_offset-depth;
 
-    line_p1.x=0;
-    line_p1.y=0;
-    line_p1.z=0;
+        line_p1.x=0;
+        line_p1.y=0;
+        line_p1.z=0;
 
-    line_p2=rotated_unit_vector*20.0;
+        line_p2=rotated_unit_vector;
 
-  
-    Vector3D<double> intersection_pt= projection_plane.getIntersectingLine(line_p1,line_p2);
+    
+        Vector3D<double> intersection_pt= projection_plane.getIntersectingLine(line_p1,line_p2);
 
-    Vector3D<double> data_transmitted;
+        Vector3D<double> data_transmitted;
 
-    data_transmitted.x=-1 * intersection_pt.x;
-    data_transmitted.y=intersection_pt.y;
-    data_transmitted.z=-1 * intersection_pt.z;
+        data_transmitted.x=-1 * intersection_pt.x;
+        data_transmitted.y=intersection_pt.y;
+        data_transmitted.z=-1 * intersection_pt.z;
 
-    Vector3DMsg point_msg;
-    point_msg.data = data_transmitted;
-    this->_output_port_0->receiveMsgData(&point_msg);
+        Vector3DMsg point_msg;
+        point_msg.data = data_transmitted;
+        this->_output_port_0->receiveMsgData(&point_msg);
 
 
     }
