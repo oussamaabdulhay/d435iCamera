@@ -88,7 +88,7 @@ void test_rotation::update_rotation_matrices()
 
     R_i_d_temp = R_i_d.Update(drone_orientation); //Create the rotation matrices
 
-    R_i_d_temp=R_i_d_temp.inverse().eval();
+    R_i_d_temp=R_i_d_temp.transpose().eval();
 
     this->Update_unit_vector(R_i_d_temp);
 }

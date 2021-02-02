@@ -57,7 +57,7 @@ void plane_line_intersector::process(DataMsg* t_msg, Port* t_port) {
         line_p1.y=0;
         line_p1.z=0;
 
-        line_p2=rotated_unit_vector;
+        line_p2=rotated_unit_vector * 20;
 
     
         Vector3D<double> intersection_pt= projection_plane.getIntersectingLine(line_p1,line_p2);
