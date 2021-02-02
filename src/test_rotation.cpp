@@ -3,7 +3,7 @@ using namespace std;
 
 test_rotation::test_rotation()
 {
-    f_c=616.437;
+    f_c=-616.5;
     
     this->_input_port_0 = new InputPort(ports_id::IP_0_CAMERA, this);
     this->_input_port_1 = new InputPort(ports_id::IP_1_ROLL, this);

@@ -30,7 +30,7 @@ ROSUnit* rosunit_camera_before_rotation = ROSUnit_Factory_main.CreateROSUnit(ROS
                                                                   ROSUnit_msg_type::ROSUnit_Point,
                                                                   "/camera_angles_rotation");
 ROSUnit* rosunit_pixel = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher,
-                                                                  ROSUnit_msg_type::ROSUnit_Point,
+                                                                  ROSUnit_msg_type::ROSUnit_Point2D,
                                                                   "/pixel_data");
 ROSUnit* rosunit_servoing_object_position = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher,
                                                                   ROSUnit_msg_type::ROSUnit_Point,
@@ -51,7 +51,7 @@ rosunit_yaw_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_0]->connect
 
 locate->getPorts()[(int)test_rotation::ports_id::OP_0_DATA]->connect(rosunit_camera->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
 locate->getPorts()[(int)test_rotation::ports_id::OP_CAMERA_ANGLES_DATA]->connect(rosunit_camera_before_rotation->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
-locate->getPorts()[(int)test_rotation::ports_id::OP_PIXEL_DATA]->connect(rosunit_pixel->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
+locate->getPorts()[(int)test_rotation::ports_id::OP_PIXEL_DATA]->connect(rosunit_pixel->getPorts()[(int)ROSUnit_Point2DPub::ports_id::IP_0]);
 
 plane_line_intersector* estimate = new plane_line_intersector();
 
