@@ -70,7 +70,7 @@ void plane_line_intersector::process(DataMsg* t_msg, Port* t_port) {
         Vector3D<double> data_transmitted;
 
 
-        data_transmitted.x=intersection_pt.x - drone_camera_offset.x;
+        data_transmitted.x=(intersection_pt.x - drone_camera_offset.x) * -1;
         data_transmitted.y=intersection_pt.y - drone_camera_offset.y;
         data_transmitted.z=(intersection_pt.z - drone_camera_offset.z) * -1;
 
