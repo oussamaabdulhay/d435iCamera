@@ -35,7 +35,7 @@ class test_rotation: public Block
          float f_c;
     public:
         Vector2D<float> ball_location;
-        RotationMatrix3by3 R_i_d;
+        RotationMatrix3by3 R_d_i;
         Vector3D<float> drone_orientation,camera_vector;
         Vector3D<float> obj_pos;
         void Update_unit_vector(Eigen::Matrix<float,3,3>);

@@ -85,11 +85,11 @@ void test_rotation::update_camera_vector()
 
 void test_rotation::update_rotation_matrices()    
 {
-    Eigen::Matrix<float, 3, 3> R_i_d_temp(3, 3);
+    Eigen::Matrix<float, 3, 3> R_d_to_i_temp(3, 3);
 
-    R_i_d_temp = R_i_d.Update(drone_orientation); //Create the rotation matrices
+    R_d_to_i_temp = R_d_i.Update(drone_orientation); //Create the rotation matrices
 
-    R_i_d_temp=R_i_d_temp.transpose().eval();
+    R_d_to_i_temp=R_d_to_i_temp.transpose().eval();
 
-    this->Update_unit_vector(R_i_d_temp);
+    this->Update_unit_vector(R_d_to_i_temp);
 }

@@ -35,6 +35,9 @@ ROSUnit* rosunit_pixel = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::
 ROSUnit* rosunit_servoing_object_position = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher,
                                                                   ROSUnit_msg_type::ROSUnit_Point,
                                                                   "/servoing_object_position");
+ROSUnit* rosunit_servoing_object_position_with_offset = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher,
+                                                                  ROSUnit_msg_type::ROSUnit_Point,
+                                                                  "/servoing_object_position_with_offset");
 ROSUnit* rosunit_yaw_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                   ROSUnit_msg_type::ROSUnit_Point,
                                                                   "/providers/yaw");
@@ -57,8 +60,12 @@ plane_line_intersector* estimate = new plane_line_intersector();
 
 locate->getPorts()[(int)test_rotation::ports_id::OP_0_DATA]->connect(estimate->getPorts()[(int)plane_line_intersector::ports_id::IP_0_UNIT_VEC]);
 rosunit_depth->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_1]->connect(estimate->getPorts()[(int)plane_line_intersector::ports_id::IP_1_DEPTH_DATA]);
+myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_0_ROLL]->connect(estimate->getPorts()[(int)plane_line_intersector::ports_id::IP_2_ROLL]);
+myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_1_PITCH]->connect(estimate->getPorts()[(int)plane_line_intersector::ports_id::IP_3_PITCH]);
+rosunit_yaw_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_0]->connect(estimate->getPorts()[(int)plane_line_intersector::ports_id::IP_4_YAW]);
 
 estimate->getPorts()[(int)plane_line_intersector::ports_id::OP_0_DATA]->connect(rosunit_servoing_object_position->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
+estimate->getPorts()[(int)plane_line_intersector::ports_id::OP_1_DATA]->connect(rosunit_servoing_object_position_with_offset->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
 
 
 ros::Rate r(70);
