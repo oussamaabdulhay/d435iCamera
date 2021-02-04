@@ -3,8 +3,8 @@ using namespace std;
 
 plane_line_intersector::plane_line_intersector()
 {
-    drone_camera_offset.x = 0;
-    drone_camera_offset.y = -0.15;
+    drone_camera_offset.x = 0.15;
+    drone_camera_offset.y = 0;
     drone_camera_offset.z = -0.05;
 
     plane_point1.x=1.31;
@@ -85,9 +85,13 @@ void plane_line_intersector::process(DataMsg* t_msg, Port* t_port) {
         Vector3D<double> offset=rotate_offset();
         Vector3D<double> data_transmitted_with_offset;
 
-        data_transmitted_with_offset.x=(intersection_pt.x * -1)-offset.x;
-        data_transmitted_with_offset.y=intersection_pt.y-offset.y;
-        data_transmitted_with_offset.z=(intersection_pt.z * -1)-offset.z;
+        data_transmitted_with_offset.x=(intersection_pt.x * -1)+offset.x;
+        data_transmitted_with_offset.y=intersection_pt.y+offset.y;
+        data_transmitted_with_offset.z=(intersection_pt.z * -1)+offset.z;
+
+        // data_transmitted_with_offset.x=offset.x;
+        // data_transmitted_with_offset.y=offset.y;
+        // data_transmitted_with_offset.z=offset.z;
 
         Vector3DMsg point_and_offset_msg;
         point_and_offset_msg.data = data_transmitted_with_offset;
