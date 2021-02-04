@@ -3,6 +3,10 @@ using namespace std;
 
 plane_line_intersector::plane_line_intersector()
 {
+    drone_camera_offset.x = 0;
+    drone_camera_offset.y = -0.15;
+    drone_camera_offset.z = -0.05;
+
     plane_point1.x=1.31;
     plane_point1.y=3.18;
     plane_point1.z=1.79;
@@ -41,6 +45,7 @@ void plane_line_intersector::process(DataMsg* t_msg, Port* t_port) {
         rotated_unit_vector.y=provider->data.y;
         rotated_unit_vector.z=provider->data.z;
     }
+    
     else if(t_port->getID() == ports_id::IP_1_DEPTH_DATA) //TODO: Caution about update rate
     { 
         depth=provider->data.x;
@@ -64,9 +69,12 @@ void plane_line_intersector::process(DataMsg* t_msg, Port* t_port) {
 
         Vector3D<double> data_transmitted;
 
-        data_transmitted.x=-1 * intersection_pt.x;
-        data_transmitted.y=intersection_pt.y;
-        data_transmitted.z=-1 * intersection_pt.z;
+
+        data_transmitted.x=intersection_pt.x - drone_camera_offset.x;
+        data_transmitted.y=intersection_pt.y - drone_camera_offset.y;
+        data_transmitted.z=(intersection_pt.z - drone_camera_offset.z) * -1;
+
+    
 
         Vector3DMsg point_msg;
         point_msg.data = data_transmitted;
@@ -75,4 +83,3 @@ void plane_line_intersector::process(DataMsg* t_msg, Port* t_port) {
 
     }
 }
-

@@ -45,7 +45,7 @@ public:
     int iLowS = 59;
     int iHighS = 255;
 
-    int iLowV = 124;
+    int iLowV = 188;
     int iHighV = 255;
 
     enum ports_id {OP_0_DATA};
