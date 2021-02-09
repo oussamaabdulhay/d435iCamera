@@ -7,10 +7,9 @@ BallDetectorRgb::BallDetectorRgb(ros::NodeHandle &main_nodehandle)
 {
   nh_=main_nodehandle;
 
-  this->_output_port = new OutputPort(ports_id::OP_0_DATA, this);
-  _ports = {_output_port};
+  image_sub_ = it_.subscribe("/camera/color/image_raw", 1, &BallDetectorRgb::imageCb, this);
+  pixel_center_location = nh_.advertise<geometry_msgs::Point>("/pixel_data", 1);
 
-  image_sub_ = it_.subscribe("/camera/color/image_raw", 1,&BallDetectorRgb::imageCb, this);
     
   // puby = nh_.advertise<std_msgs::Float32>("camera_provider_y", 1);
   // pubx = nh_.advertise<std_msgs::Float32>("camera_provider_x", 1);
@@ -33,7 +32,7 @@ BallDetectorRgb::BallDetectorRgb(ros::NodeHandle &main_nodehandle)
   params.filterByInertia = false;
   params.minInertiaRatio = 0.6;
 
-  threshold = 1.0;
+  threshold = 10.0;
 }
 
 BallDetectorRgb::~BallDetectorRgb()
@@ -82,9 +81,10 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
     std::cout << "EMPTY KEYPOINTS\n";
     // pubx.publish(msg_x);
     // puby.publish(msg_y);
-    Vector3DMsg output_msg;
-    output_msg.data = obj_pos;
-    this->_output_port->receiveMsgData((DataMsg*) &output_msg);
+    geometry_msgs::Point point_pub;
+    point_pub.x=obj_pos.x;
+    point_pub.y=obj_pos.y;
+    pixel_center_location.publish(point_pub);
   }
 
   else
@@ -104,9 +104,10 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
         // msg_y.data = _c_.y - 240;
         obj_pos.x = _c_.x-320;
         obj_pos.y = _c_.y-240;
-        Vector3DMsg output_msg;
-        output_msg.data = obj_pos;
-        this->_output_port->receiveMsgData((DataMsg*) &output_msg);
+        geometry_msgs::Point point_pub;
+        point_pub.x=obj_pos.x;
+        point_pub.y=obj_pos.y;
+        pixel_center_location.publish(point_pub);
         // pubx.publish(msg_x);
         // puby.publish(msg_y);
       }
@@ -121,9 +122,10 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
         // puby.publish(msg_y);
         obj_pos.x = _c_.x-320;
         obj_pos.y = _c_.y-240;
-        Vector3DMsg output_msg;
-        output_msg.data = obj_pos;
-        this->_output_port->receiveMsgData((DataMsg*) &output_msg);
+        geometry_msgs::Point point_pub;
+        point_pub.x=obj_pos.x;
+        point_pub.y=obj_pos.y;
+        pixel_center_location.publish(point_pub);
       }
       temp.erase(temp.begin());
     }
@@ -141,4 +143,20 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
     cv::imshow("Original", imgOriginal);             //show the original image
     cv::imshow("im_with_keypoints", im_with_keypoints); 
     cv::waitKey(1);
+}
+
+
+int main(int argc, char **argv)
+{
+  ros::init(argc, argv, "Object_detection_rgb_node");
+  ros::NodeHandle nh_;
+  BallDetectorRgb* detection=new BallDetectorRgb(nh_);
+
+  ros::Rate r(60); 
+  while (ros::ok())
+  {
+    ros::spinOnce();
+    r.sleep();
+  }
+  
 }

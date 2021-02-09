@@ -29,7 +29,6 @@ class test_rotation: public Block
         Port* _input_port_2;
         Port* _input_port_3;
         Port* _output_port_0;
-        Port* _output_port_1;
 
          float f_c;
     public:
@@ -44,7 +43,7 @@ class test_rotation: public Block
 
 
         
-         enum ports_id {IP_0_CAMERA,IP_1_ROLL,IP_2_PITCH,IP_3_YAW,OP_0_DATA, OP_PIXEL_DATA};
+         enum ports_id {IP_0_CAMERA,IP_1_ROLL,IP_2_PITCH,IP_3_YAW,OP_0_DATA};
          test_rotation();
         ~test_rotation();
 };

@@ -28,11 +28,11 @@ FILE(GLOB SOURCE_FILES *.hpp *.cpp *.h
         )
 
 add_executable(depth_node node3/main.cpp ${SOURCE_FILES})
-add_executable(test_node node2/main.cpp ${SOURCE_FILES})
-add_executable(rgb_node node1/main.cpp ${SOURCE_FILES})
+add_executable(pixel_to_meters_node pixel_to_meters_node/main.cpp ${SOURCE_FILES})
+add_executable(Object_detection_rgb_node rgb/BallDetectorRgb.cpp ${SOURCE_FILES})
 
 target_link_libraries(depth_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-target_link_libraries(rgb_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
-target_link_libraries(test_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+target_link_libraries(Object_detection_rgb_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+target_link_libraries(pixel_to_meters_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 
 

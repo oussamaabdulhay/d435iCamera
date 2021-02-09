@@ -11,8 +11,7 @@ test_rotation::test_rotation()
     this->_input_port_2 = new InputPort(ports_id::IP_2_PITCH, this);
     this->_input_port_3 = new InputPort(ports_id::IP_3_YAW, this);
     this->_output_port_0 = new OutputPort(ports_id::OP_0_DATA, this);
-    this->_output_port_1 = new OutputPort(ports_id::OP_PIXEL_DATA, this);
-    _ports = {_input_port_0, _input_port_1,_input_port_2 ,_input_port_3,_output_port_0, _output_port_1};
+    _ports = {_input_port_0, _input_port_1,_input_port_2 ,_input_port_3,_output_port_0};
 }
 
 test_rotation::~test_rotation()
@@ -29,11 +28,7 @@ void test_rotation::process(DataMsg* t_msg, Port* t_port) {
         ball_location.y= pixel_location->data.y;
 
         update_camera_vector(ball_location);
-
-        Vector3DMsg pixel_data_raw_msg;
-        pixel_data_raw_msg.data = ball_location;
-        this->_output_port_1->receiveMsgData(&pixel_data_raw_msg);
-        
+     
     }
     else if(t_port->getID() == ports_id::IP_1_ROLL)
     { 

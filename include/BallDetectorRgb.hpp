@@ -5,29 +5,24 @@
 #include <opencv2/features2d.hpp>
 #include <image_transport/image_transport.h>
 #include <cmath>
-// #include "std_msgs/Float32.h"
-// #include "std_msgs/Int32.h"
-// #include "std_msgs/UInt32.h"
-// #include "std_msgs/UInt64.h"
 #include "geometry_msgs/Point.h"
 #include <sstream>
 #include <ros/ros.h>
 #include <iostream>
 #include "medianFilter.hpp"
-#include "HEAR_core/InputPort.hpp"
-#include "HEAR_core/OutputPort.hpp"
 #include "HEAR_math/Vector2D.hpp"
 #include "HEAR_msg/Vector3DMsg.hpp"
-#include "HEAR_core/Block.hpp"
+#include "geometry_msgs/Point.h"
+#include "ros/ros.h"
 
-class BallDetectorRgb : public Block
+
+class BallDetectorRgb
 {
-private:
-    Port* _output_port;
+
 
 public:
     ros::NodeHandle nh_;
-    ros::Publisher puby, pubx;
+    ros::Publisher pixel_center_location;
     image_transport::ImageTransport it_;
     image_transport::Subscriber image_sub_;
     float threshold;
@@ -47,8 +42,6 @@ public:
     int iLowV = 188;
     int iHighV = 255;
 
-    enum ports_id {OP_0_DATA};
-    void process(DataMsg* t_msg, Port* t_port){};
 
     BallDetectorRgb(ros::NodeHandle&);
     ~BallDetectorRgb();
