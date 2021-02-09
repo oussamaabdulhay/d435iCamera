@@ -15,7 +15,7 @@ BallDetectorRgb::BallDetectorRgb(ros::NodeHandle &main_nodehandle)
   // puby = nh_.advertise<std_msgs::Float32>("camera_provider_y", 1);
   // pubx = nh_.advertise<std_msgs::Float32>("camera_provider_x", 1);
   
-  //cv::namedWindow(OPENCV_WINDOW);
+  cv::namedWindow(OPENCV_WINDOW);
 
   params.filterByArea = true;
   params.minArea = 800;
@@ -33,12 +33,12 @@ BallDetectorRgb::BallDetectorRgb(ros::NodeHandle &main_nodehandle)
   params.filterByInertia = false;
   params.minInertiaRatio = 0.6;
 
-  threshold = 10;
+  threshold = 1.0;
 }
 
 BallDetectorRgb::~BallDetectorRgb()
 {
-    //cv::destroyWindow(OPENCV_WINDOW);
+    cv::destroyWindow(OPENCV_WINDOW);
 }
 
 void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
@@ -74,15 +74,15 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
     cv::Ptr<cv::SimpleBlobDetector> detector = cv::SimpleBlobDetector::create(params);
     detector->detect(imgThresholded, keypoints);
     cv::drawKeypoints(imgThresholded, keypoints, im_with_keypoints, cv::Scalar(128, 0, 0), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-    // std_msgs::Float32 msg_y;
     // std_msgs::Float32 msg_x;
+    // std_msgs::Float32 msg_y;
     std::cout<<keypoints.size()<<std::endl;
   if (keypoints.size() == 0)
   {
     std::cout << "EMPTY KEYPOINTS\n";
-    // puby.publish(msg_y);
     // pubx.publish(msg_x);
-    Vector2DMsg output_msg;
+    // puby.publish(msg_y);
+    Vector3DMsg output_msg;
     output_msg.data = obj_pos;
     this->_output_port->receiveMsgData((DataMsg*) &output_msg);
   }
@@ -100,28 +100,28 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
       {
         _c_.x = temp.back().x;
         _c_.y = temp.back().y;
-        // msg_y.data = _c_.y - 240;
         // msg_x.data = _c_.x - 320;
-        obj_pos.y = _c_.y-240;
+        // msg_y.data = _c_.y - 240;
         obj_pos.x = _c_.x-320;
-        Vector2DMsg output_msg;
+        obj_pos.y = _c_.y-240;
+        Vector3DMsg output_msg;
         output_msg.data = obj_pos;
         this->_output_port->receiveMsgData((DataMsg*) &output_msg);
-        // puby.publish(msg_y);
         // pubx.publish(msg_x);
+        // puby.publish(msg_y);
       }
 
       else
       {
         //std::cout << "standard dev too high\n";
         _c_ = filter->getMedian(temp, _c_);
-        // msg_y.data = _c_.y - 240;
         // msg_x.data = _c_.x - 320;
-        // puby.publish(msg_y);
+        // msg_y.data = _c_.y - 240;
         // pubx.publish(msg_x);
-        obj_pos.y = _c_.y-240;
+        // puby.publish(msg_y);
         obj_pos.x = _c_.x-320;
-        Vector2DMsg output_msg;
+        obj_pos.y = _c_.y-240;
+        Vector3DMsg output_msg;
         output_msg.data = obj_pos;
         this->_output_port->receiveMsgData((DataMsg*) &output_msg);
       }
@@ -129,16 +129,16 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
     }
   }
 
-    // cv::createTrackbar("LowH", OPENCV_WINDOW, &iLowH, 179);
-    // cv::createTrackbar("HighH", OPENCV_WINDOW, &iHighH, 179);
+    cv::createTrackbar("LowH", OPENCV_WINDOW, &iLowH, 179);
+    cv::createTrackbar("HighH", OPENCV_WINDOW, &iHighH, 179);
 
-    // cv::createTrackbar("LowS", OPENCV_WINDOW, &iLowS, 255);
-    // cv::createTrackbar("HighS", OPENCV_WINDOW, &iHighS, 255);
+    cv::createTrackbar("LowS", OPENCV_WINDOW, &iLowS, 255);
+    cv::createTrackbar("HighS", OPENCV_WINDOW, &iHighS, 255);
 
-    // cv::createTrackbar("LowV", OPENCV_WINDOW, &iLowV, 255);
-    // cv::createTrackbar("HighV", OPENCV_WINDOW, &iHighV, 255);
-    // cv::imshow("Thresholded Image", imgThresholded); //show the thresholded image
-    // cv::imshow("Original", imgOriginal);             //show the original image
-    // cv::imshow("im_with_keypoints", im_with_keypoints); 
-    // cv::waitKey(1);
+    cv::createTrackbar("LowV", OPENCV_WINDOW, &iLowV, 255);
+    cv::createTrackbar("HighV", OPENCV_WINDOW, &iHighV, 255);
+    cv::imshow("Thresholded Image", imgThresholded); //show the thresholded image
+    cv::imshow("Original", imgOriginal);             //show the original image
+    cv::imshow("im_with_keypoints", im_with_keypoints); 
+    cv::waitKey(1);
 }

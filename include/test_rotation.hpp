@@ -30,23 +30,21 @@ class test_rotation: public Block
         Port* _input_port_3;
         Port* _output_port_0;
         Port* _output_port_1;
-        Port* _output_port_2;
 
          float f_c;
     public:
-        Vector2D<float> ball_location;
-        RotationMatrix3by3 R_d_i;
-        Vector3D<float> drone_orientation,camera_vector;
-        Vector3D<float> obj_pos;
-        void Update_unit_vector(Eigen::Matrix<float,3,3>);
+        Vector3D<float> ball_location,drone_orientation;
+        
+        void rotate_camera_vector(Vector3D<float>);
         void process(DataMsg* t_msg, Port* t_port);
-        void update_camera_vector();
-        void update_rotation_matrices();
+        void update_camera_vector(Vector3D<float>);
+        void update_rotation_matrices(Vector3D<float>);
+        Eigen::Matrix<float, 3, 3> R_d_to_i_temp;
         
 
 
         
-         enum ports_id {IP_0_CAMERA,IP_1_ROLL,IP_2_PITCH,IP_3_YAW,OP_0_DATA, OP_CAMERA_ANGLES_DATA, OP_PIXEL_DATA};
+         enum ports_id {IP_0_CAMERA,IP_1_ROLL,IP_2_PITCH,IP_3_YAW,OP_0_DATA, OP_PIXEL_DATA};
          test_rotation();
         ~test_rotation();
 };

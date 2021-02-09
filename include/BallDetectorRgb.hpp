@@ -17,7 +17,7 @@
 #include "HEAR_core/InputPort.hpp"
 #include "HEAR_core/OutputPort.hpp"
 #include "HEAR_math/Vector2D.hpp"
-#include "HEAR_msg/Vector2DMsg.hpp"
+#include "HEAR_msg/Vector3DMsg.hpp"
 #include "HEAR_core/Block.hpp"
 
 class BallDetectorRgb : public Block
@@ -30,9 +30,8 @@ public:
     ros::Publisher puby, pubx;
     image_transport::ImageTransport it_;
     image_transport::Subscriber image_sub_;
-    Vector2DMsg pixel_location;
     float threshold;
-    Vector2D<float> obj_pos;
+    Vector3D<float> obj_pos;
     cv::Point2d _c_;
     std::vector<cv::Point2f> temp;
     const std::string OPENCV_WINDOW = "Image window";
@@ -42,7 +41,7 @@ public:
     int iLowH = 0;
     int iHighH = 57;
 
-    int iLowS = 59;
+    int iLowS = 80;
     int iHighS = 255;
 
     int iLowV = 188;
