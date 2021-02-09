@@ -70,7 +70,7 @@ estimate->getPorts()[(int)plane_line_intersector::ports_id::OP_0_DATA]->connect(
 estimate->getPorts()[(int)plane_line_intersector::ports_id::OP_1_DATA]->connect(rosunit_servoing_object_position_with_offset->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
 
 
-ros::Rate r(60);
+ros::Rate r(70);
 while (ros::ok())
 {
   r.sleep();
