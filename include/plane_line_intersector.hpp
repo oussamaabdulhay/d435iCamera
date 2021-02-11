@@ -36,7 +36,8 @@ class plane_line_intersector: public Block
         float depth;
         Vector3D<float> plane_point1,plane_point2, plane_point3,drone_orientation;
         void process(DataMsg* t_msg, Port* t_port);
-        Vector3D<float> rotate_offset();    
+        Vector3D<float> rotate_offset();
+        Vector3D<float> get_object_location();       
               
         enum ports_id {IP_0_UNIT_VEC,IP_1_DEPTH_DATA,IP_2_ROLL, IP_3_PITCH, IP_4_YAW, OP_0_DATA, OP_1_DATA};
         plane_line_intersector();

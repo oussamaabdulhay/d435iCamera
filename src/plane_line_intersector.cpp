@@ -48,55 +48,13 @@ void plane_line_intersector::process(DataMsg* t_msg, Port* t_port) {
         rotated_unit_vector.x=provider->data.x;
         rotated_unit_vector.y=provider->data.y;
         rotated_unit_vector.z=provider->data.z;
+        this->get_object_location();
     }
     
     else if(t_port->getID() == ports_id::IP_1_DEPTH_DATA) //TODO: Caution about update rate
     { 
-        Vector3D<double> offset=rotate_offset();
-        depth=provider->data.x + offset.y;
-        
-        
-        Vector3D<double> line_p1,line_p2;
-    
-        projection_plane.p0.y=inertial_plane_offset-depth;
-        projection_plane.p1.y=inertial_plane_offset-depth;
-        projection_plane.p2.y=inertial_plane_offset-depth;
-
-        line_p1.x=0;
-        line_p1.y=0;
-        line_p1.z=0;
-
-        line_p2=rotated_unit_vector * 20.;
-
-    
-        Vector3D<double> intersection_pt= projection_plane.getIntersectingLine(line_p1,line_p2);
-
-        Vector3D<double> data_transmitted;
-
-
-        data_transmitted.x=(intersection_pt.x) * -1;
-        data_transmitted.y=intersection_pt.y;
-        data_transmitted.z=(intersection_pt.z) * -1;
-
-        Vector3DMsg point_msg;
-        point_msg.data = data_transmitted;
-        this->_output_port_0->receiveMsgData(&point_msg);
-
-        
-        Vector3D<double> data_transmitted_with_offset;
-
-        // data_transmitted_with_offset.x=(intersection_pt.x * -1)+offset.x;
-        // data_transmitted_with_offset.y=intersection_pt.y;
-        // data_transmitted_with_offset.z=(intersection_pt.z * -1)+offset.z;
-
-        data_transmitted_with_offset.x=offset.x;
-        data_transmitted_with_offset.y=offset.y;
-        data_transmitted_with_offset.z=offset.z;
-
-        Vector3DMsg point_and_offset_msg;
-        point_and_offset_msg.data = data_transmitted_with_offset;
-        this->_output_port_1->receiveMsgData(&point_and_offset_msg);
-
+        //depth=provider->data.x + offset.y;
+        depth=provider->data.x;
     }
        
     else if(t_port->getID() == ports_id::IP_2_ROLL)
@@ -129,4 +87,52 @@ Vector3D<float> plane_line_intersector::rotate_offset()
     t_results.z = drone_camera_offset.x * R_body_to_inertial_temp(2, 0) + drone_camera_offset.y * R_body_to_inertial_temp(2, 1) + drone_camera_offset.z * R_body_to_inertial_temp(2, 2);
 
     return t_results;
+}
+
+Vector3D<float> plane_line_intersector::get_object_location()    
+{
+    Vector3D<double> line_p1,line_p2;
+    Vector3D<double> offset=rotate_offset();
+
+    float depth_adjusted_for_offset=depth+offset.y;
+
+    projection_plane.p0.y=inertial_plane_offset-depth_adjusted_for_offset;
+    projection_plane.p1.y=inertial_plane_offset-depth_adjusted_for_offset;
+    projection_plane.p2.y=inertial_plane_offset-depth_adjusted_for_offset;
+
+    line_p1.x=0;
+    line_p1.y=0;
+    line_p1.z=0;
+
+    line_p2=rotated_unit_vector * 20.;
+
+
+    Vector3D<double> intersection_pt= projection_plane.getIntersectingLine(line_p1,line_p2);
+
+    Vector3D<double> data_transmitted;
+
+
+    data_transmitted.x=(intersection_pt.x) * -1;
+    data_transmitted.y=intersection_pt.y;
+    data_transmitted.z=(intersection_pt.z) * -1;
+
+    Vector3DMsg point_msg;
+    point_msg.data = data_transmitted;
+    this->_output_port_0->receiveMsgData(&point_msg);
+
+    
+    Vector3D<double> data_transmitted_with_offset;
+
+    // data_transmitted_with_offset.x=(intersection_pt.x * -1)+offset.x;
+    // data_transmitted_with_offset.y=intersection_pt.y;
+    // data_transmitted_with_offset.z=(intersection_pt.z * -1)+offset.z;
+
+    data_transmitted_with_offset.x=offset.x;
+    data_transmitted_with_offset.y=offset.y;
+    data_transmitted_with_offset.z=offset.z;
+
+    Vector3DMsg point_and_offset_msg;
+    point_and_offset_msg.data = data_transmitted_with_offset;
+    this->_output_port_1->receiveMsgData(&point_and_offset_msg);
+
 }

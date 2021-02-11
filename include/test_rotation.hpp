@@ -32,11 +32,10 @@ class test_rotation: public Block
 
          float f_c;
     public:
-        Vector3D<float> ball_location,drone_orientation;
+        Vector3D<float> ball_location,drone_orientation,camera_vector;
         
-        void rotate_camera_vector(Vector3D<float>);
+        void rotate_camera_vector();
         void process(DataMsg* t_msg, Port* t_port);
-        void update_camera_vector(Vector3D<float>);
         void update_rotation_matrices(Vector3D<float>);
         Eigen::Matrix<float, 3, 3> R_d_to_i_temp;
         

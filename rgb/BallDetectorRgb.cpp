@@ -14,7 +14,7 @@ BallDetectorRgb::BallDetectorRgb(ros::NodeHandle &main_nodehandle)
   // puby = nh_.advertise<std_msgs::Float32>("camera_provider_y", 1);
   // pubx = nh_.advertise<std_msgs::Float32>("camera_provider_x", 1);
   
-  cv::namedWindow(OPENCV_WINDOW);
+  //cv::namedWindow(OPENCV_WINDOW);
 
   params.filterByArea = true;
   params.minArea = 800;
@@ -37,7 +37,7 @@ BallDetectorRgb::BallDetectorRgb(ros::NodeHandle &main_nodehandle)
 
 BallDetectorRgb::~BallDetectorRgb()
 {
-    cv::destroyWindow(OPENCV_WINDOW);
+    //cv::destroyWindow(OPENCV_WINDOW);
 }
 
 void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
@@ -131,18 +131,18 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
     }
   }
 
-    cv::createTrackbar("LowH", OPENCV_WINDOW, &iLowH, 179);
-    cv::createTrackbar("HighH", OPENCV_WINDOW, &iHighH, 179);
+    // cv::createTrackbar("LowH", OPENCV_WINDOW, &iLowH, 179);
+    // cv::createTrackbar("HighH", OPENCV_WINDOW, &iHighH, 179);
 
-    cv::createTrackbar("LowS", OPENCV_WINDOW, &iLowS, 255);
-    cv::createTrackbar("HighS", OPENCV_WINDOW, &iHighS, 255);
+    // cv::createTrackbar("LowS", OPENCV_WINDOW, &iLowS, 255);
+    // cv::createTrackbar("HighS", OPENCV_WINDOW, &iHighS, 255);
 
-    cv::createTrackbar("LowV", OPENCV_WINDOW, &iLowV, 255);
-    cv::createTrackbar("HighV", OPENCV_WINDOW, &iHighV, 255);
-    cv::imshow("Thresholded Image", imgThresholded); //show the thresholded image
-    cv::imshow("Original", imgOriginal);             //show the original image
-    cv::imshow("im_with_keypoints", im_with_keypoints); 
-    cv::waitKey(1);
+    // cv::createTrackbar("LowV", OPENCV_WINDOW, &iLowV, 255);
+    // cv::createTrackbar("HighV", OPENCV_WINDOW, &iHighV, 255);
+    // cv::imshow("Thresholded Image", imgThresholded); //show the thresholded image
+    // cv::imshow("Original", imgOriginal);             //show the original image
+    // cv::imshow("im_with_keypoints", im_with_keypoints); 
+    // cv::waitKey(1);
 }
 
 

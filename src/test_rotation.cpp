@@ -27,8 +27,11 @@ void test_rotation::process(DataMsg* t_msg, Port* t_port) {
         ball_location.x= pixel_location->data.x;
         ball_location.y= pixel_location->data.y;
 
-        update_camera_vector(ball_location);
-     
+        camera_vector.x = -1 * f_c;
+        camera_vector.y = ball_location.x;
+        camera_vector.z = ball_location.y;
+
+        this->update_rotation_matrices(drone_orientation);
     }
     else if(t_port->getID() == ports_id::IP_1_ROLL)
     { 
@@ -38,17 +41,16 @@ void test_rotation::process(DataMsg* t_msg, Port* t_port) {
     else if(t_port->getID() == ports_id::IP_2_PITCH)
     { 
         drone_orientation.y =provider->data.x;
-        //std::cout<<"drone_orientation.y"<<drone_orientation.y<<std::endl;
+        //std::cout<<"drone_orientation.y"<<drone_orientation.y<<std::endl;        
     }
     else if(t_port->getID() == ports_id::IP_3_YAW)
     { 
-        drone_orientation.z =provider->data.x;
-        this->update_rotation_matrices(drone_orientation);
+        drone_orientation.z =provider->data.x;        
     }
 }
 
 
-void test_rotation::rotate_camera_vector(Vector3D<float> camera_vector)
+void test_rotation::rotate_camera_vector()
 {
     Vector3D<float> t_results;
     t_results.x = camera_vector.x * R_d_to_i_temp(0, 0) + camera_vector.y * R_d_to_i_temp(0, 1) + camera_vector.z * R_d_to_i_temp(0, 2);
@@ -61,18 +63,11 @@ void test_rotation::rotate_camera_vector(Vector3D<float> camera_vector)
 }
 
 
-void test_rotation::update_camera_vector(Vector3D<float> camera_vector)
-{
-    camera_vector.x = -1. * f_c;
-    camera_vector.y = ball_location.x;
-    camera_vector.z = ball_location.y;
-
-    this->rotate_camera_vector(camera_vector);
-}
-
-void test_rotation::update_rotation_matrices(Vector3D<float> drone_attitude)    
+void test_rotation::update_rotation_matrices(Vector3D<float> drone_orientation)    
 {
     RotationMatrix3by3 R_d_i;
-    R_d_to_i_temp = R_d_i.Update(drone_attitude); //Create the rotation matrices
-    R_d_to_i_temp.transposeInPlace();
+    R_d_to_i_temp = R_d_i.Update(drone_orientation); //Create the rotation matrices
+    //R_d_to_i_temp.transposeInPlace();
+
+    this->rotate_camera_vector();
 }
