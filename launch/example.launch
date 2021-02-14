@@ -1,0 +1,10 @@
+<launch> 
+  <node pkg="detection_d435i" type="pixel_to_meters_node" 
+  name="pixel_to_meters_node" output="screen"/>
+ 
+  <node pkg="detection_d435i" type="Object_detection_rgb_node" 
+  name="Object_detection_rgb_node" output="screen"/> 
+
+  <include file="$(find realsense2_camera)/launch/rs_camera.launch"/>
+
+</launch> 
