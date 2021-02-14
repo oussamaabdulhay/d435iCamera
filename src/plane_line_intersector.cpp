@@ -53,7 +53,6 @@ void plane_line_intersector::process(DataMsg* t_msg, Port* t_port) {
     
     else if(t_port->getID() == ports_id::IP_1_DEPTH_DATA) //TODO: Caution about update rate
     { 
-        //depth=provider->data.x + offset.y;
         depth=provider->data.x;
     }
        
@@ -79,7 +78,7 @@ Vector3D<float> plane_line_intersector::rotate_offset()
 
     R_body_to_inertial_temp = R_b_i.Update(drone_orientation); //Create the rotation matrices
 
-    R_body_to_inertial_temp=R_body_to_inertial_temp.transpose().eval();
+    R_body_to_inertial_temp.transposeInPlace();
 
     Vector3D<float> t_results;
     t_results.x = drone_camera_offset.x * R_body_to_inertial_temp(0, 0) + drone_camera_offset.y * R_body_to_inertial_temp(0, 1) + drone_camera_offset.z * R_body_to_inertial_temp(0, 2);
