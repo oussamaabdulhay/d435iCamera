@@ -29,7 +29,7 @@ void test_rotation::process(DataMsg* t_msg, Port* t_port) {
 
         camera_vector.x = -1 * f_c;
         camera_vector.y = ball_location.x;
-        camera_vector.z = -1 * ball_location.y;
+        camera_vector.z = ball_location.y;
 
         this->update_rotation_matrices(drone_orientation);
     }
