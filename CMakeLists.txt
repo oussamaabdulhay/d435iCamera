@@ -10,6 +10,9 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   hear_architecture
   hear_ros_bridge
+  tf2_ros
+  tf2
+  geometry_msgs
 )
 
 find_package(OpenCV REQUIRED)
@@ -30,8 +33,10 @@ FILE(GLOB SOURCE_FILES *.hpp *.cpp *.h
 add_executable(depth_node node3/main.cpp ${SOURCE_FILES})
 add_executable(pixel_to_meters_node pixel_to_meters_node/main.cpp ${SOURCE_FILES})
 add_executable(Object_detection_rgb_node rgb/BallDetectorRgb.cpp ${SOURCE_FILES})
+add_executable(my_tf2_broadcaster transformation_node/transformation_node.cpp ${SOURCE_FILES})
 
 target_link_libraries(depth_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+target_link_libraries(my_tf2_broadcaster ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 target_link_libraries(Object_detection_rgb_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 target_link_libraries(pixel_to_meters_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 

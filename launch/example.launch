@@ -5,6 +5,11 @@
   <node pkg="detection_d435i" type="Object_detection_rgb_node" 
   name="Object_detection_rgb_node" output="screen"/> 
 
+  <node pkg="tf" type="static_transform_publisher" name="cameraToBodyTF" args="0.15 -0.03 -0.05 0 0 0 body camera 100" />
+
+
+
+
   <include file="$(find realsense2_camera)/launch/rs_camera.launch"/>
 
 </launch> 
