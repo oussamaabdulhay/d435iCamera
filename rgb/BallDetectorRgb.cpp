@@ -76,6 +76,7 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
     // std_msgs::Float32 msg_x;
     // std_msgs::Float32 msg_y;
     std::cout<<keypoints.size()<<std::endl;
+     std::cout<<"hello1"<<std::endl;
     if (keypoints.size() == 0)
     {
       std::cout << "EMPTY KEYPOINTS\n";
@@ -98,6 +99,7 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
     //   //std::cout << std_dev << std::endl;
     //   if (std_dev < threshold)
       {
+        std::cout<<"hello2"<<std::endl;
         _c_.x = temp.back().x;
         _c_.y = temp.back().y;
         // msg_x.data = _c_.x - 320;
@@ -107,7 +109,7 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
         geometry_msgs::Point point_pub;
         point_pub.x=obj_pos.x;
         point_pub.y=obj_pos.y;
-        std::cout<<"hello"<<std::endl;
+        
         pixel_center_location.publish(point_pub);
         // pubx.publish(msg_x);
         // puby.publish(msg_y);
