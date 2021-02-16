@@ -111,9 +111,9 @@ Vector3D<float> plane_line_intersector::get_object_location()
     Vector3D<double> data_transmitted;
 
 
-    data_transmitted.x=(intersection_pt.x + offset.x) * -1;
+    data_transmitted.x=(intersection_pt.x) * -1;
     data_transmitted.y=intersection_pt.y;
-    data_transmitted.z=(intersection_pt.z + offset.z) * -1;
+    data_transmitted.z=(intersection_pt.z) * -1;
 
     Vector3DMsg point_msg;
     point_msg.data = data_transmitted;
