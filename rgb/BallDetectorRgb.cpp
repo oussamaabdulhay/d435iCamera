@@ -76,7 +76,7 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
     // std_msgs::Float32 msg_x;
     // std_msgs::Float32 msg_y;
     std::cout<<keypoints.size()<<std::endl;
-     std::cout<<"hello1"<<std::endl;
+    std::cout<<"hello1"<<std::endl;
     if (keypoints.size() == 0)
     {
       std::cout << "EMPTY KEYPOINTS\n";
