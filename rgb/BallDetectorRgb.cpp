@@ -107,6 +107,7 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
         geometry_msgs::Point point_pub;
         point_pub.x=obj_pos.x;
         point_pub.y=obj_pos.y;
+        std::cout<<"hello"<<std::endl;
         pixel_center_location.publish(point_pub);
         // pubx.publish(msg_x);
         // puby.publish(msg_y);
