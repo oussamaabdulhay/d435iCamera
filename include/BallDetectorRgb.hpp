@@ -9,7 +9,7 @@
 #include <sstream>
 #include <ros/ros.h>
 #include <iostream>
-#include "medianFilter.hpp"
+//#include "medianFilter.hpp"
 #include "HEAR_math/Vector2D.hpp"
 #include "HEAR_msg/Vector3DMsg.hpp"
 #include "geometry_msgs/Point.h"
@@ -31,7 +31,7 @@ public:
     std::vector<cv::Point2f> temp;
     const std::string OPENCV_WINDOW = "Image window";
     std::vector<cv::KeyPoint> keypoints;
-    medianFilter* filter=new medianFilter();
+    //medianFilter* filter=new medianFilter();
     float point_of_interest;
     int iLowH = 0;
     int iHighH = 57;
