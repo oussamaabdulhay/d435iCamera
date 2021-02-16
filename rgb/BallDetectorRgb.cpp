@@ -32,7 +32,7 @@ BallDetectorRgb::BallDetectorRgb(ros::NodeHandle &main_nodehandle)
   params.filterByInertia = false;
   params.minInertiaRatio = 0.6;
 
-  threshold = 10.0;
+  threshold = 10000.0;
 }
 
 BallDetectorRgb::~BallDetectorRgb()
@@ -76,7 +76,6 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
     // std_msgs::Float32 msg_x;
     // std_msgs::Float32 msg_y;
     std::cout<<keypoints.size()<<std::endl;
-    std::cout<<"hello1"<<std::endl;
     if (keypoints.size() == 0)
     {
       std::cout << "EMPTY KEYPOINTS\n";
@@ -89,17 +88,16 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
     }
 
   else if (keypoints.size() == 1) // to be removed
-  //{
-    // float std_dev;
-    // temp.push_back(keypoints[0].pt);
+  {
+    float std_dev;
+    temp.push_back(keypoints[0].pt);
 
-    // if (temp.size() == 1)
-    // {
-    //   std_dev = filter->getStdDev(temp);
-    //   //std::cout << std_dev << std::endl;
-    //   if (std_dev < threshold)
+    if (temp.size() == 1)
+    {
+      std_dev = filter->getStdDev(temp);
+      //std::cout << std_dev << std::endl;
+      if (std_dev < threshold)
       {
-        std::cout<<"hello2"<<std::endl;
         _c_.x = temp.back().x;
         _c_.y = temp.back().y;
         // msg_x.data = _c_.x - 320;
@@ -115,24 +113,24 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
         // puby.publish(msg_y);
       }
 
-    //   else
-    //   {
-    //     //std::cout << "standard dev too high\n";
-    //     _c_ = filter->getMedian(temp, _c_);
-    //     // msg_x.data = _c_.x - 320;
-    //     // msg_y.data = _c_.y - 240;
-    //     // pubx.publish(msg_x);
-    //     // puby.publish(msg_y);
-    //     obj_pos.x = _c_.x-320;
-    //     obj_pos.y = _c_.y-240;
-    //     geometry_msgs::Point point_pub;
-    //     point_pub.x=obj_pos.x;
-    //     point_pub.y=obj_pos.y;
-    //     pixel_center_location.publish(point_pub);
-    //   }
-    //   temp.erase(temp.begin());
-    // }
-  //}
+      else
+      {
+        std::cout << "standard dev too high\n";
+        _c_ = filter->getMedian(temp, _c_);
+        // msg_x.data = _c_.x - 320;
+        // msg_y.data = _c_.y - 240;
+        // pubx.publish(msg_x);
+        // puby.publish(msg_y);
+        obj_pos.x = _c_.x-320;
+        obj_pos.y = _c_.y-240;
+        geometry_msgs::Point point_pub;
+        point_pub.x=obj_pos.x;
+        point_pub.y=obj_pos.y;
+        pixel_center_location.publish(point_pub);
+      }
+      temp.erase(temp.begin());
+    }
+  }
 
     // cv::createTrackbar("LowH", OPENCV_WINDOW, &iLowH, 179);
     // cv::createTrackbar("HighH", OPENCV_WINDOW, &iHighH, 179);
