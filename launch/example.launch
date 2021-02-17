@@ -2,8 +2,8 @@
   <node pkg="detection_d435i" type="pixel_to_meters_node" 
   name="pixel_to_meters_node" output="screen"/>
  
-  <node pkg="detection_d435i" type="Object_detection_rgb_node" 
-  name="Object_detection_rgb_node" output="screen"/> 
+  <node pkg="detection_d435i" type="object_detection_rgb_node" 
+  name="object_detection_rgb_node" output="screen"/> 
 
   <node pkg="tf" type="static_transform_publisher" name="cameraToBodyTF" args="0.15 -0.03 -0.05 0 0 0 body camera 100" />
 
