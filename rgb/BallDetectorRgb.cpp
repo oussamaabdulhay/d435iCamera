@@ -17,7 +17,7 @@ BallDetectorRgb::BallDetectorRgb(ros::NodeHandle &main_nodehandle)
   //cv::namedWindow(OPENCV_WINDOW);
 
   params.filterByArea = true;
-  params.minArea = 500;
+  params.minArea = 100;
   params.maxArea = 5000;
 
   // Filter by Circularity
