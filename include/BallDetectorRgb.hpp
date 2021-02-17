@@ -34,7 +34,7 @@ public:
     medianFilter* filter=new medianFilter();
     float point_of_interest;
     int iLowH = 0;
-    int iHighH = 113;
+    int iHighH = 55;
 
     int iLowS = 32;
     int iHighS = 137;

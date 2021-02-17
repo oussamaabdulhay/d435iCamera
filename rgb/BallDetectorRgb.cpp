@@ -22,11 +22,11 @@ BallDetectorRgb::BallDetectorRgb(ros::NodeHandle &main_nodehandle)
 
   // Filter by Circularity
   params.filterByCircularity = true;
-  params.minCircularity = 0.5;
+  params.minCircularity = 0.2;
 
   // Filter by Convexity
   params.filterByConvexity = true;
-  params.minConvexity = 0.6;
+  params.minConvexity = 0.2;
 
   // Filter by Inertia
   params.filterByInertia = false;
@@ -37,7 +37,7 @@ BallDetectorRgb::BallDetectorRgb(ros::NodeHandle &main_nodehandle)
 
 BallDetectorRgb::~BallDetectorRgb()
 {
-    //cv::destroyWindow(OPENCV_WINDOW);
+  //cv::destroyWindow(OPENCV_WINDOW);
 }
 
 void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
