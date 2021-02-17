@@ -14,23 +14,23 @@ tf2_ros::Buffer tf_Buffer;
 
 
 void pixelCallback(const geometry_msgs::Point& msg){
-
     geometry_msgs::PointStamped object_position_m,object_position_m_transformed;
     object_position_m.point.x= 3.9;
-    object_position_m.point.x= msg.x * (3.9 / 616.5);
-    object_position_m.point.x= msg.y * (3.9 / 616.5);
-    object_position_m.header.stamp=ros::Time::now();
+    object_position_m.point.y= msg.x * (3.9 / 616.5);
+    object_position_m.point.z= msg.y * (3.9 / 616.5);
+    object_position_m.header.stamp=ros::Time::now()-ros::Duration(0.015);
     object_position_m.header.frame_id= "camera";
 
 
 
-    try{
-        tf_Buffer.transform(object_position_m, object_position_m_transformed, "inertial", ros::Duration(0.5));
-    }
-    catch (tf2::TransformException &ex) {
-    ROS_WARN("Failure %s\n", ex.what()); //Print exception which was caught
-    }
-    pub_object_pos_i.publish(object_position_m_transformed);
+    // try{
+    //     tf_Buffer.transform(object_position_m, object_position_m_transformed, "inertial", ros::Duration(0.5));
+    // }
+    // catch (tf2::TransformException &ex) {
+    // ROS_WARN("Failure %s\n", ex.what()); //Print exception which was caught
+    // }
+    //pub_object_pos_i.publish(object_position_m_transformed);
+    pub_object_pos_i.publish(object_position_m);
 }
 
 

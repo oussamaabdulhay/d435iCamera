@@ -17,7 +17,7 @@ BallDetectorRgb::BallDetectorRgb(ros::NodeHandle &main_nodehandle)
   //cv::namedWindow(OPENCV_WINDOW);
 
   params.filterByArea = true;
-  params.minArea = 800;
+  params.minArea = 500;
   params.maxArea = 5000;
 
   // Filter by Circularity
@@ -149,7 +149,7 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "Object_detection_rgb_node");
+  ros::init(argc, argv, "object_detection_rgb_node");
   ros::NodeHandle nh_;
   BallDetectorRgb* detection=new BallDetectorRgb(nh_);
 
