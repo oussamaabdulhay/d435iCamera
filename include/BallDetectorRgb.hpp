@@ -14,6 +14,7 @@
 #include "HEAR_msg/Vector3DMsg.hpp"
 #include "geometry_msgs/Point.h"
 #include "ros/ros.h"
+#include <sys/stat.h>
 
 
 class BallDetectorRgb
@@ -42,10 +43,15 @@ public:
     int iLowV = 234;
     int iHighV = 255;
 
+    int imageIndex = 0;
+    int file;
+    
+    std::string Path = "/home/osama/noDetectionFrames/frame";
 
     BallDetectorRgb(ros::NodeHandle&);
     ~BallDetectorRgb();
 
     void imageCb(const sensor_msgs::ImageConstPtr &msg);
+    void saveImage(cv::Mat&);
     cv::SimpleBlobDetector::Params params;
 };

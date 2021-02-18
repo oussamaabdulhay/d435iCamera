@@ -22,17 +22,18 @@ BallDetectorRgb::BallDetectorRgb(ros::NodeHandle &main_nodehandle)
 
   // Filter by Circularity
   params.filterByCircularity = true;
-  params.minCircularity = 0.2;
+  params.minCircularity = 0.5;
 
   // Filter by Convexity
   params.filterByConvexity = true;
-  params.minConvexity = 0.2;
+  params.minConvexity = 0.5;
 
   // Filter by Inertia
   params.filterByInertia = false;
   params.minInertiaRatio = 0.6;
 
   threshold = 10000.0;
+  file = mkdir("/home/osama/noDetectionFrames", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 }
 
 BallDetectorRgb::~BallDetectorRgb()
@@ -85,6 +86,7 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
       point_pub.x=obj_pos.x;
       point_pub.y=obj_pos.y;
       pixel_center_location.publish(point_pub);
+      saveImage(im_with_keypoints);
     }
 
   else if (keypoints.size() == 1) // to be removed
@@ -132,8 +134,8 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
     }
   }
 
-    // cv::createTrackbar("LowH", OPENCV_WINDOW, &iLowH, 179);
-    // cv::createTrackbar("HighH", OPENCV_WINDOW, &iHighH, 179);
+    // cv::createTrackbar("LowH", OPENCV_WINDOW, &iLowH, 255);
+    // cv::createTrackbar("HighH", OPENCV_WINDOW, &iHighH, 255);
 
     // cv::createTrackbar("LowS", OPENCV_WINDOW, &iLowS, 255);
     // cv::createTrackbar("HighS", OPENCV_WINDOW, &iHighS, 255);
@@ -144,6 +146,14 @@ void BallDetectorRgb::imageCb(const sensor_msgs::ImageConstPtr &msg)
     // cv::imshow("Original", imgOriginal);             //show the original image
     // cv::imshow("im_with_keypoints", im_with_keypoints); 
     // cv::waitKey(1);
+}
+
+void BallDetectorRgb::saveImage(cv::Mat &img )
+{
+  Path=Path+std::to_string(imageIndex)+ ".jpg";
+  cv::imwrite(Path,img);
+  Path="/home/osama/noDetectionFrames/frame";
+  imageIndex++;
 }
 
 
