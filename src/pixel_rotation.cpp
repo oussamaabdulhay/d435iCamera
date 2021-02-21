@@ -67,7 +67,7 @@ void pixel_rotation::update_rotation_matrices(Vector3D<float> drone_orientation)
 {
     RotationMatrix3by3 R_d_i;
     R_d_to_i_temp = R_d_i.Update(drone_orientation); //Create the rotation matrices
-    R_d_to_i_temp.transposeInPlace(); //drone to inertial
+    //R_d_to_i_temp.transposeInPlace(); //drone to inertial
 
     this->rotate_camera_vector();
 }

@@ -79,7 +79,7 @@ Vector3D<float> plane_line_intersector::rotate_offset()
     RotationMatrix3by3 R_b_i;
 
     R_body_to_inertial_temp = R_b_i.Update(drone_orientation); //Create the rotation matrices
-    R_body_to_inertial_temp.transposeInPlace(); //drone to inertial
+    //R_body_to_inertial_temp.transposeInPlace(); //drone to inertial
 
     Vector3D<float> t_results;
     t_results.x = p_d_c.x * R_body_to_inertial_temp(0, 0) + p_d_c.y * R_body_to_inertial_temp(0, 1) + p_d_c.z * R_body_to_inertial_temp(0, 2);
@@ -95,7 +95,7 @@ Vector3D<float> plane_line_intersector::get_object_location()
     Vector3D<float> object_location,data_transmitted_bo, data_transmitted_ao;
 
     object_location.x= (rotated_pixel_vector.x * 4.0) / rotated_pixel_vector.y;
-    object_location.y= 4.0;
+    object_location.y= 3.69;
     object_location.z=(rotated_pixel_vector.z * 4.0) / rotated_pixel_vector.y;
 
 
