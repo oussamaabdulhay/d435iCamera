@@ -21,7 +21,7 @@ using Eigen::MatrixXd;
 
 //using the matrix above the Horizantal field of view is 54.8429 degrees (0.9572 rad) and the Vertical field of view is 42.817 degrees (0.7473 rad).
 
-class test_rotation: public Block
+class pixel_rotation: public Block
 {
     private:
         Port* _input_port_0;
@@ -43,6 +43,6 @@ class test_rotation: public Block
 
         
          enum ports_id {IP_0_CAMERA,IP_1_ROLL,IP_2_PITCH,IP_3_YAW,OP_0_DATA};
-         test_rotation();
-        ~test_rotation();
+         pixel_rotation();
+        ~pixel_rotation();
 };

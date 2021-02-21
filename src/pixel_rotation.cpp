@@ -1,7 +1,7 @@
-#include "test_rotation.hpp"
+#include "pixel_rotation.hpp"
 using namespace std;
 
-test_rotation::test_rotation()
+pixel_rotation::pixel_rotation()
 {
 
     f_c=616.5;
@@ -14,11 +14,11 @@ test_rotation::test_rotation()
     _ports = {_input_port_0, _input_port_1,_input_port_2 ,_input_port_3,_output_port_0};
 }
 
-test_rotation::~test_rotation()
+pixel_rotation::~pixel_rotation()
 {
 }
 
-void test_rotation::process(DataMsg* t_msg, Port* t_port) {
+void pixel_rotation::process(DataMsg* t_msg, Port* t_port) {
     Vector3DMsg *provider = (Vector3DMsg *)t_msg;
 
     if(t_port->getID() == ports_id::IP_0_CAMERA)
@@ -50,7 +50,7 @@ void test_rotation::process(DataMsg* t_msg, Port* t_port) {
 }
 
 
-void test_rotation::rotate_camera_vector()
+void pixel_rotation::rotate_camera_vector()
 {
     Vector3D<float> t_results;
     t_results.x = camera_vector.x * R_d_to_i_temp(0, 0) + camera_vector.y * R_d_to_i_temp(0, 1) + camera_vector.z * R_d_to_i_temp(0, 2);
@@ -63,11 +63,11 @@ void test_rotation::rotate_camera_vector()
 }
 
 
-void test_rotation::update_rotation_matrices(Vector3D<float> drone_orientation)    
+void pixel_rotation::update_rotation_matrices(Vector3D<float> drone_orientation)    
 {
     RotationMatrix3by3 R_d_i;
     R_d_to_i_temp = R_d_i.Update(drone_orientation); //Create the rotation matrices
-    R_d_to_i_temp.transposeInPlace();
+    R_d_to_i_temp.transposeInPlace(); //drone to inertial
 
     this->rotate_camera_vector();
 }
