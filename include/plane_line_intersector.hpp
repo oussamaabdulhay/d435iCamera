@@ -28,6 +28,7 @@ class plane_line_intersector: public Block
         Port* _output_port_0;
         Port* _output_port_1;
         Port* _output_port_2;
+        Port* _output_port_3;
        
         Plane3D<double> projection_plane;
         double inertial_plane_offset;
@@ -40,7 +41,7 @@ class plane_line_intersector: public Block
         Vector3D<float> rotate_offset();
         Vector3D<float> get_object_location();       
               
-        enum ports_id {IP_0_UNIT_VEC,IP_1_DEPTH_DATA,IP_2_ROLL, IP_3_PITCH, IP_4_YAW, OP_0_DATA, OP_1_DATA, OP_2_DATA};
+        enum ports_id {IP_0_UNIT_VEC,IP_1_DEPTH_DATA,IP_2_ROLL, IP_3_PITCH, IP_4_YAW, OP_0_DATA, OP_1_DATA, OP_2_DATA, OP_3_DATA};
         plane_line_intersector();
         ~plane_line_intersector();
 };

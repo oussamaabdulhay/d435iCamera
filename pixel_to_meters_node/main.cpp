@@ -32,7 +32,10 @@ ROSUnit* rosunit_p1 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Pub
                                                                   "/p1");
 ROSUnit* rosunit_p2 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher,
                                                                   ROSUnit_msg_type::ROSUnit_Point,
-                                                                  "/p2");                                                                  
+                                                                  "/p2");
+ROSUnit* rosunit_intersecting_output = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher,
+                                                                  ROSUnit_msg_type::ROSUnit_Point,
+                                                                  "/intersecting_output");                                                                          
 ROSUnit* rosunit_yaw_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                   ROSUnit_msg_type::ROSUnit_Point,
                                                                   "/providers/yaw"); //0
@@ -69,6 +72,7 @@ rosunit_yaw_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_0]->connect
 estimate->getPorts()[(int)plane_line_intersector::ports_id::OP_0_DATA]->connect(rosunit_p_i_d->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
 estimate->getPorts()[(int)plane_line_intersector::ports_id::OP_1_DATA]->connect(rosunit_p1->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
 estimate->getPorts()[(int)plane_line_intersector::ports_id::OP_2_DATA]->connect(rosunit_p2->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
+estimate->getPorts()[(int)plane_line_intersector::ports_id::OP_2_DATA]->connect(rosunit_intersecting_output->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
 
 
 ros::Rate r(200);

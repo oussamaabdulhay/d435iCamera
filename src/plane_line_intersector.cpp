@@ -33,8 +33,9 @@ plane_line_intersector::plane_line_intersector()
     this->_output_port_0 = new OutputPort(ports_id::OP_0_DATA, this);
     this->_output_port_1 = new OutputPort(ports_id::OP_1_DATA, this);
     this->_output_port_2 = new OutputPort(ports_id::OP_2_DATA, this);
+    this->_output_port_3 = new OutputPort(ports_id::OP_3_DATA, this);
 
-    _ports = {_input_port_0, _input_port_1, _input_port_2, _input_port_3, _input_port_4, _output_port_0, _output_port_1, _output_port_2};
+    _ports = {_input_port_0, _input_port_1, _input_port_2, _input_port_3, _input_port_4, _output_port_0, _output_port_1, _output_port_2, _output_port_3};
 }
 
 plane_line_intersector::~plane_line_intersector()
@@ -139,6 +140,10 @@ Vector3D<float> plane_line_intersector::get_object_location()
     Vector3DMsg p2_msg;
     p2_msg.data = p2;
     this->_output_port_2->receiveMsgData(&p2_msg);
+
+    Vector3DMsg intersection_msg;
+    intersection_msg.data = intersection_pt;
+    this->_output_port_3->receiveMsgData(&intersection_msg);
 
 
 
