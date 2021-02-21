@@ -26,10 +26,10 @@ ROSUnit* rosunit_camera = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type:
                                                                   "/camera_provider");
 ROSUnit* rosunit_p_i_d = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher,
                                                                   ROSUnit_msg_type::ROSUnit_Point,
-                                                                  "/p_i_d");
+                                                                  "/data_before_offset");
 ROSUnit* rosunit_p1 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher,
                                                                   ROSUnit_msg_type::ROSUnit_Point,
-                                                                  "/p1");
+                                                                  "/data_after_offset");
 ROSUnit* rosunit_p2 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher,
                                                                   ROSUnit_msg_type::ROSUnit_Point,
                                                                   "/p2");

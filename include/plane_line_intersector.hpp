@@ -32,7 +32,7 @@ class plane_line_intersector: public Block
        
         Plane3D<double> projection_plane;
         double inertial_plane_offset;
-        Vector3D<double> rotated_unit_vector,p_d_c,p_i_d;
+        Vector3D<double> rotated_pixel_vector,p_d_c,p_i_d;
 
     public:
         float depth;
