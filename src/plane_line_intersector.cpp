@@ -55,9 +55,6 @@ void plane_line_intersector::process(DataMsg* t_msg, Port* t_port) {
     else if(t_port->getID() == ports_id::IP_1_DEPTH_DATA) //TODO: Caution about update rate
     { 
         depth=provider->data.x;
-        p_i_d.x=0;
-        p_i_d.y= -1 * depth;
-        p_i_d.z=0;
     }
        
     else if(t_port->getID() == ports_id::IP_2_ROLL)
@@ -96,11 +93,17 @@ Vector3D<float> plane_line_intersector::get_object_location()
     Vector3D<double> p1 , p2 , p_d_c;
     Vector3D<double> p_d_c_rotated=rotate_offset();
 
+    
+
     float depth_adjusted_for_camera_offset=depth+p_d_c_rotated.y;
 
     projection_plane.p0.y=inertial_plane_offset-depth_adjusted_for_camera_offset;
     projection_plane.p1.y=inertial_plane_offset-depth_adjusted_for_camera_offset;
     projection_plane.p2.y=inertial_plane_offset-depth_adjusted_for_camera_offset;
+
+    p_i_d.x=0;
+    p_i_d.y= -(inertial_plane_offset-depth);
+    p_i_d.z=0;
 
       
     p1=p_i_d + p_d_c_rotated;
