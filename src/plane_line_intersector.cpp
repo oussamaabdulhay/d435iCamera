@@ -94,9 +94,9 @@ Vector3D<float> plane_line_intersector::get_object_location()
 
     Vector3D<float> object_location,data_transmitted_bo, data_transmitted_ao;
 
-    object_location.x= (rotated_pixel_vector.x * 4.0) / rotated_pixel_vector.y;
-    object_location.y= 3.69;
-    object_location.z=(rotated_pixel_vector.z * 4.0) / rotated_pixel_vector.y;
+    object_location.x= (rotated_pixel_vector.x * 3.80) / rotated_pixel_vector.y;
+    object_location.y= 3.80;
+    object_location.z=(rotated_pixel_vector.z * 3.80) / rotated_pixel_vector.y;
 
 
 
@@ -107,6 +107,8 @@ Vector3D<float> plane_line_intersector::get_object_location()
     Vector3DMsg data_before_offset;
     data_before_offset.data = data_transmitted_bo;
     this->_output_port_0->receiveMsgData(&data_before_offset);
+
+
 
     Vector3D<float> rotated_offset = rotate_offset();
 
