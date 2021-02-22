@@ -79,7 +79,7 @@ Vector3D<float> plane_line_intersector::rotate_offset()
     RotationMatrix3by3 R_b_i;
 
     R_body_to_inertial_temp = R_b_i.Update(drone_orientation); //Create the rotation matrices
-    //R_body_to_inertial_temp.transposeInPlace(); //drone to inertial
+    R_body_to_inertial_temp.transposeInPlace(); //drone to inertial
 
     Vector3D<float> t_results;
     t_results.x = p_d_c.x * R_body_to_inertial_temp(0, 0) + p_d_c.y * R_body_to_inertial_temp(0, 1) + p_d_c.z * R_body_to_inertial_temp(0, 2);
