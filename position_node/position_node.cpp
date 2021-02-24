@@ -38,12 +38,12 @@ void pixelCallback(const geometry_msgs::Point& msg){
   object_pos_m.point.z = _depth * rotated_px.point.z/rotated_px.point.y;
   object_pos_m.header = rotated_px.header;
   
-  try{
-    tf_Buffer.transform(object_pos_m, obj_bf, "body_fixed", ros::Duration(0.02));    
-  }
-  catch (tf2::TransformException &ex) {
-    ROS_WARN("Failure %s\n", ex.what()); //Print exception which was caught
-  }
+  // try{
+  //   tf_Buffer.transform(object_pos_m, obj_bf, "body_fixed", ros::Duration(0.02));    
+  // }
+  // catch (tf2::TransformException &ex) {
+  //   ROS_WARN("Failure %s\n", ex.what()); //Print exception which was caught
+  // }
 
   t_stamped.header = object_pos_m.header;
   t_stamped.child_frame_id = "object";
@@ -53,7 +53,7 @@ void pixelCallback(const geometry_msgs::Point& msg){
   t_stamped.transform.rotation.w = 1.0;
   br.sendTransform(t_stamped);
 
-  pub_object_pos_i.publish(obj_bf);
+  pub_object_pos_i.publish(object_pos_m);
 }
 
 
