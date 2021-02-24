@@ -1,14 +1,16 @@
 <launch> 
-  <!--node pkg="detection_d435i" type="position_node" 
-  name="position_node" output="screen"/-->
+  <node pkg="detection_d435i" type="position_node" 
+  name="position_node" output="screen"/>
  
   <node pkg="detection_d435i" type="my_tf2_broadcaster" 
   name="my_tf2_broadcaster" output="screen"/> 
 
   <!-- <node pkg="tf" type="static_transform_publisher" name="cameraToBodyTF" args="0.15 -0.03 -0.05 0 0 0 body camera 100" /> -->
 
-  <node pkg="tf2_ros" type="static_transform_publisher" name="link1_broadcaster" args="0.15 -0.03 -0.05 0 0 0 body camera" />
-
+  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="link1_broadcaster" args="0.15 -0.03 -0.05 0 0 0 body camera">
+  <remap from="/tf_static" to="/tf" />
+  </node> -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="cameraToBodyTF" args="0.13 -0.03 -0.12 0 0 0 body camera" />
 
 
 </launch> 

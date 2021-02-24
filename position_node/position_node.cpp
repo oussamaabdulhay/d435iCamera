@@ -18,7 +18,11 @@ float _depth = 3.8, _f = 616.5;
 void pixelCallback(const geometry_msgs::Point& msg){
   static tf2_ros::TransformBroadcaster br;
   
-  object_pos_px.point = msg;
+  //object_pos_px.point = msg;
+  object_pos_px.point.x = msg.x * -1;
+  object_pos_px.point.y = msg.y * -1;
+
+
   object_pos_px.point.z = _f;
 
   try{
