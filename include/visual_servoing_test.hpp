@@ -26,22 +26,30 @@
 class visual_servoing_test
 {
   public:
+    ros::NodeHandle nh_;
     typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::Image,geometry_msgs::PoseStamped,geometry_msgs::PoseStamped,geometry_msgs::PoseStamped> sync_poilicy;
     message_filters::Synchronizer<sync_poilicy> *sync;
     message_filters::Subscriber<sensor_msgs::Image> *image1_sub;
     message_filters::Subscriber<geometry_msgs::PoseStamped> *roll_sub;
     message_filters::Subscriber<geometry_msgs::PoseStamped> *pitch_sub;
     message_filters::Subscriber<geometry_msgs::PoseStamped> *yaw_sub;
-    ros::NodeHandle nh_;
     ros::Publisher pixel_center_location,drone_pose;
-    float threshold;
-    geometry_msgs::Point obj_pos;
-    cv::Point2d _c_;
-    std::vector<cv::Point2f> temp;
+    float threshold, f_c, depth;
+    int file;
+    cv::Point2d center_point;
+    std::vector<cv::Point2f> list_of_positions;
     const std::string OPENCV_WINDOW = "Image window";
     std::vector<cv::KeyPoint> keypoints;
     medianFilter* filter=new medianFilter();
-    float point_of_interest;
+    Vector3D<float> drone_orientation,p_drone_camera;
+
+    void ImageProcess(const sensor_msgs::ImageConstPtr& ,const geometry_msgs::PoseStampedConstPtr& , const geometry_msgs::PoseStampedConstPtr& , const geometry_msgs::PoseStampedConstPtr& );    
+    void rotate_camera_vector(Vector3D<float> );
+    void update_rotation_matrices(Vector3D<float>);
+    Vector3D<float> rotate_offset();
+    Vector3D<float> get_object_location(Vector3D<float>);
+    void saveImage(cv::Mat&);  
+        
     int iLowH = 0;
     int iHighH = 49;
 
@@ -52,31 +60,12 @@ class visual_servoing_test
     int iHighV = 255;
 
     int imageIndex = 0;
-    int file;
+   
 
-    float f_c;
-    Vector3D<float> ball_location,drone_orientation,camera_vector;
-        
-    void rotate_camera_vector();
-    void update_rotation_matrices(Vector3D<float>);
-    Eigen::Matrix<float, 3, 3> R_d_to_i_temp;
-
-    double inertial_plane_offset;
-    Vector3D<double> rotated_pixel_vector,p_d_c,p_i_d;
-
-    float depth;
-    Vector3D<float> plane_point1,plane_point2, plane_point3;
-    Vector3D<float> rotate_offset();
-    Vector3D<float> get_object_location(Vector3D<float>);  
-    
     std::string Path = "/home/osama/noDetectionFrames/frame";
+    cv::SimpleBlobDetector::Params params;
 
     visual_servoing_test(ros::NodeHandle&);
     ~visual_servoing_test();
-
-    void ImageProcess(const sensor_msgs::ImageConstPtr& ,const geometry_msgs::PoseStampedConstPtr& , const geometry_msgs::PoseStampedConstPtr& , const geometry_msgs::PoseStampedConstPtr& );
-
-    void saveImage(cv::Mat&);
-    cv::SimpleBlobDetector::Params params;
 
 };
