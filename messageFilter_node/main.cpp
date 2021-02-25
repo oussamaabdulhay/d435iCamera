@@ -11,7 +11,7 @@ int main(int argc, char** argv)
   ros::NodeHandle nh;
 
   ChangeType ct(nh);
-  visual_servoing_test ic(nh);
+  visual_servoing_test vst(nh);
 
   ros::spin();
 
