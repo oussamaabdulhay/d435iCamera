@@ -45,6 +45,7 @@ visual_servoing_test::~visual_servoing_test()
 void visual_servoing_test::ImageProcess(const sensor_msgs::ImageConstPtr& msg,const geometry_msgs::PoseStampedConstPtr& roll, const geometry_msgs::PoseStampedConstPtr& pitch, const geometry_msgs::PoseStampedConstPtr& yaw)
 
 {
+    std::cout<<"HELLOOOOOOOO\n";
     cv_bridge::CvImagePtr cv_ptr;
     try
     {
