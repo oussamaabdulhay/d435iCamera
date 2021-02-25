@@ -7,10 +7,10 @@ visual_servoing_test::visual_servoing_test(ros::NodeHandle &main_nodehandle)
       
     nh_=main_nodehandle;
     //cv::namedWindow(OPENCV_WINDOW);
-    image1_sub = new message_filters::Subscriber<sensor_msgs::Image>(nh_, "/camera/color/image_raw", 100); // TODO: look into queue size
-    roll_sub = new message_filters::Subscriber<geometry_msgs::PoseStamped>(nh_, "/roll_angle", 100);
-    pitch_sub = new message_filters::Subscriber<geometry_msgs::PoseStamped>(nh_, "/pitch_angle", 100);
-    yaw_sub = new message_filters::Subscriber<geometry_msgs::PoseStamped>(nh_, "/yaw_angle", 100);
+    image1_sub = new message_filters::Subscriber<sensor_msgs::Image>(nh_, "/camera/color/image_raw", 10000); // TODO: look into queue size
+    roll_sub = new message_filters::Subscriber<geometry_msgs::PoseStamped>(nh_, "/roll_angle", 100000);
+    pitch_sub = new message_filters::Subscriber<geometry_msgs::PoseStamped>(nh_, "/pitch_angle", 100000); //TODO: Maybe add depth subscriber
+    yaw_sub = new message_filters::Subscriber<geometry_msgs::PoseStamped>(nh_, "/yaw_angle", 100000);
     sync = new message_filters::Synchronizer<sync_poilicy>(sync_poilicy(100),*image1_sub, *roll_sub, *pitch_sub, *yaw_sub);
     sync->registerCallback(boost::bind(&visual_servoing_test::ImageProcess, this, _1, _2, _3, _4));
 
@@ -126,7 +126,7 @@ void visual_servoing_test::ImageProcess(const sensor_msgs::ImageConstPtr& msg,co
       {
         std::cout << "standard dev too high\n";
         center_point = filter->getMedian(list_of_positions, center_point);
-        
+
         Vector3D<float> pixel_pos;
         pixel_pos.x = center_point.x-320;
         pixel_pos.y = center_point.y-240;
