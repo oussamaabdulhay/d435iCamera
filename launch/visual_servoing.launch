@@ -1,6 +1,6 @@
 <launch> 
-  <node pkg="detection_d435i" type="vision_node" 
-  name="vision_node" output="screen"/>
+  <node pkg="detection_d435i" type="message_filter_test" 
+  name="message_filter_test" output="screen"/>
  
   <include file="$(find realsense2_camera)/launch/rs_camera.launch"/>
 
