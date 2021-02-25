@@ -198,7 +198,7 @@ Vector3D<float> visual_servoing_test::get_object_location(Vector3D<float> rotate
     geometry_msgs::Point object_pos;
     object_pos.x=object_location.x;
     object_pos.y=object_location.y;
-    object_pos.z=object_location.y;
+    object_pos.z=object_location.z;
 
 
     drone_pose.publish(object_pos);
