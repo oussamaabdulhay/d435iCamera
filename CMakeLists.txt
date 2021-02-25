@@ -35,11 +35,14 @@ add_executable(pixel_to_meters_node pixel_to_meters_node/main.cpp ${SOURCE_FILES
 add_executable(object_detection_rgb_node rgb/BallDetectorRgb.cpp ${SOURCE_FILES})
 add_executable(my_tf2_broadcaster transformation_node/transformation_node.cpp ${SOURCE_FILES})
 add_executable(position_node position_node/position_node.cpp ${SOURCE_FILES})
+add_executable(message_filter_test messageFilter_node/main.cpp ${SOURCE_FILES})
 
 target_link_libraries(depth_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 target_link_libraries(my_tf2_broadcaster ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 target_link_libraries(object_detection_rgb_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 target_link_libraries(pixel_to_meters_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 target_link_libraries(position_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+target_link_libraries(message_filter_test ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+
 
 

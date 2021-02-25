@@ -60,7 +60,11 @@
         "unordered_set": "cpp",
         "hash_map": "cpp",
         "hash_set": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "dense": "cpp",
+        "csignal": "cpp",
+        "codecvt": "cpp",
+        "filesystem": "cpp"
     },
     "python.autoComplete.extraPaths": [
         "/home/ahmed/catkin_ws/devel_isolated/plot_tools/lib/python2.7/dist-packages",

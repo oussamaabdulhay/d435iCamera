@@ -24,7 +24,7 @@ void pixelCallback(const geometry_msgs::Point& msg){
   object_pos_px.point.z = -1 * msg.y;
 
   try{
-    cam_to_cam_fixed = tf_Buffer.lookupTransform("camera", "camera_fixed", ros::Time(0), ros::Duration(0.01) );    
+    cam_to_cam_fixed = tf_Buffer.lookupTransform("camera", "camera_fixed", ros::Time::now(), ros::Duration(0.03) );    
   }
   catch (tf2::TransformException &ex) {
     ROS_WARN("Failure %s\n", ex.what()); //Print exception which was caught
