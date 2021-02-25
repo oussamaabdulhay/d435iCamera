@@ -41,7 +41,7 @@ class visual_servoing_test
     const std::string OPENCV_WINDOW = "Image window";
     std::vector<cv::KeyPoint> keypoints;
     medianFilter* filter=new medianFilter();
-    Vector3D<float> drone_orientation,p_drone_camera;
+    Vector3D<float> drone_orientation,p_drone_camera,pixel_pos;
 
     void ImageProcess(const sensor_msgs::ImageConstPtr& ,const geometry_msgs::PoseStampedConstPtr& , const geometry_msgs::PoseStampedConstPtr& , const geometry_msgs::PoseStampedConstPtr& );    
     void rotate_camera_vector(Vector3D<float> );

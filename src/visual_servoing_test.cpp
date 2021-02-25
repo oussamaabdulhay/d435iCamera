@@ -7,7 +7,7 @@ visual_servoing_test::visual_servoing_test(ros::NodeHandle &main_nodehandle)
       
     nh_=main_nodehandle;
     //cv::namedWindow(OPENCV_WINDOW);
-    image1_sub = new message_filters::Subscriber<sensor_msgs::Image>(nh_, "/camera/color/image_raw", 10000); // TODO: look into queue size
+    image1_sub = new message_filters::Subscriber<sensor_msgs::Image>(nh_, "/camera/color/image_raw", 100000); // TODO: look into queue size
     roll_sub = new message_filters::Subscriber<geometry_msgs::PoseStamped>(nh_, "/roll_angle", 100000);
     pitch_sub = new message_filters::Subscriber<geometry_msgs::PoseStamped>(nh_, "/pitch_angle", 100000); //TODO: Maybe add depth subscriber
     yaw_sub = new message_filters::Subscriber<geometry_msgs::PoseStamped>(nh_, "/yaw_angle", 100000);
@@ -52,6 +52,7 @@ visual_servoing_test::~visual_servoing_test()
 void visual_servoing_test::ImageProcess(const sensor_msgs::ImageConstPtr& msg,const geometry_msgs::PoseStampedConstPtr& roll, const geometry_msgs::PoseStampedConstPtr& pitch, const geometry_msgs::PoseStampedConstPtr& yaw)
 
 {
+    std::cout<<"HELLOOOOOOOO\n";
     cv_bridge::CvImagePtr cv_ptr;
     try
     {
@@ -91,9 +92,8 @@ void visual_servoing_test::ImageProcess(const sensor_msgs::ImageConstPtr& msg,co
     {
       std::cout << "EMPTY KEYPOINTS\n";
       geometry_msgs::Point point_pub;
-      Vector3D<float> obj_pos;
-      point_pub.x=obj_pos.x;
-      point_pub.y=obj_pos.y;
+      point_pub.x=pixel_pos.x;
+      point_pub.y=pixel_pos.y;
       pixel_center_location.publish(point_pub);
       saveImage(im_with_keypoints);
     }
@@ -111,7 +111,6 @@ void visual_servoing_test::ImageProcess(const sensor_msgs::ImageConstPtr& msg,co
         center_point.x = list_of_positions.back().x;
         center_point.y = list_of_positions.back().y;
 
-        Vector3D<float> pixel_pos;
         pixel_pos.x = center_point.x-320;
         pixel_pos.y = center_point.y-240;
         rotate_camera_vector(pixel_pos);
@@ -127,7 +126,6 @@ void visual_servoing_test::ImageProcess(const sensor_msgs::ImageConstPtr& msg,co
         std::cout << "standard dev too high\n";
         center_point = filter->getMedian(list_of_positions, center_point);
 
-        Vector3D<float> pixel_pos;
         pixel_pos.x = center_point.x-320;
         pixel_pos.y = center_point.y-240;
         rotate_camera_vector(pixel_pos);
