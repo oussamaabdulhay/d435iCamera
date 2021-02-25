@@ -164,7 +164,7 @@ void visual_servoing_test::rotate_camera_vector()
     t_results.y = camera_vector.x * R_d_to_i_temp(1, 0) + camera_vector.y * R_d_to_i_temp(1, 1) + camera_vector.z * R_d_to_i_temp(1, 2);
     t_results.z = camera_vector.x * R_d_to_i_temp(2, 0) + camera_vector.y * R_d_to_i_temp(2, 1) + camera_vector.z * R_d_to_i_temp(2, 2);
 
-    get_object_location();
+    get_object_location(t_results);
 
 }
 
@@ -186,7 +186,7 @@ Vector3D<float> visual_servoing_test::rotate_offset()
     return t_results;
 }
 
-Vector3D<float> visual_servoing_test::get_object_location()    
+Vector3D<float> visual_servoing_test::get_object_location(Vector3D<float> rotated_pixel_vector)    
 {
 
     Vector3D<float> object_location,data_transmitted_bo, data_transmitted_ao;

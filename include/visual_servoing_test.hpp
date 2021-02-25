@@ -67,7 +67,7 @@ class visual_servoing_test
     float depth;
     Vector3D<float> plane_point1,plane_point2, plane_point3;
     Vector3D<float> rotate_offset();
-    Vector3D<float> get_object_location();  
+    Vector3D<float> get_object_location(Vector3D<float>);  
     
     std::string Path = "/home/osama/noDetectionFrames/frame";
 
