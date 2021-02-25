@@ -9,9 +9,9 @@ ChangeType::ChangeType(ros::NodeHandle &t_nh)
     sub_pitch = nh_.subscribe("/providers/pitch", 1,&ChangeType::convert_pitch,this);
     sub_yaw = nh_.subscribe("/providers/yaw", 1,&ChangeType::convert_yaw,this);
 
-    pub_roll = nh_.advertise<geometry_msgs::PoseStamped>("roll_angle", 1000);
-    pub_pitch = nh_.advertise<geometry_msgs::PoseStamped>("pitch_angle", 1000);
-    pub_yaw = nh_.advertise<geometry_msgs::PoseStamped>("yaw_angle", 1000);
+    pub_roll = nh_.advertise<geometry_msgs::PoseStamped>("roll_angle", 1);
+    pub_pitch = nh_.advertise<geometry_msgs::PoseStamped>("pitch_angle", 1);
+    pub_yaw = nh_.advertise<geometry_msgs::PoseStamped>("yaw_angle", 1);
 }
 
 ChangeType::~ChangeType()
