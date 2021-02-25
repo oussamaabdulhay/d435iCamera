@@ -6,7 +6,7 @@ visual_servoing_test::visual_servoing_test(ros::NodeHandle &main_nodehandle)
     f_c=616.5;
       
     nh_=main_nodehandle;
-    cv::namedWindow(OPENCV_WINDOW);
+    //cv::namedWindow(OPENCV_WINDOW);
     image1_sub = new message_filters::Subscriber<sensor_msgs::Image>(nh_, "/camera/color/image_raw", 1);
     roll_sub = new message_filters::Subscriber<geometry_msgs::PoseStamped>(nh_, "/roll_angle", 1);
     pitch_sub = new message_filters::Subscriber<geometry_msgs::PoseStamped>(nh_, "/pitch_angle", 1);
@@ -39,7 +39,7 @@ visual_servoing_test::visual_servoing_test(ros::NodeHandle &main_nodehandle)
 
 visual_servoing_test::~visual_servoing_test()
 {
-  cv::destroyWindow(OPENCV_WINDOW);
+  //cv::destroyWindow(OPENCV_WINDOW);
 }
 
 void visual_servoing_test::ImageProcess(const sensor_msgs::ImageConstPtr& msg,const geometry_msgs::PoseStampedConstPtr& roll, const geometry_msgs::PoseStampedConstPtr& pitch, const geometry_msgs::PoseStampedConstPtr& yaw)
