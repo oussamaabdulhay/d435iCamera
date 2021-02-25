@@ -11,7 +11,7 @@ visual_servoing_test::visual_servoing_test(ros::NodeHandle &main_nodehandle)
     roll_sub = new message_filters::Subscriber<geometry_msgs::PoseStamped>(nh_, "/roll_angle", 100000);
     pitch_sub = new message_filters::Subscriber<geometry_msgs::PoseStamped>(nh_, "/pitch_angle", 100000);
     yaw_sub = new message_filters::Subscriber<geometry_msgs::PoseStamped>(nh_, "/yaw_angle", 100000);
-    sync = new message_filters::TimeSynchronizer<sensor_msgs::Image, geometry_msgs::PoseStamped, geometry_msgs::PoseStamped, geometry_msgs::PoseStamped>(*image1_sub, *roll_sub, *pitch_sub, *yaw_sub, 100000);
+    sync = new message_filters::Synchronizer<sync_poilicy>(sync_poilicy(100),*image1_sub, *roll_sub, *pitch_sub, *yaw_sub);
     sync->registerCallback(boost::bind(&visual_servoing_test::ImageProcess, this, _1, _2, _3, _4));
 
 

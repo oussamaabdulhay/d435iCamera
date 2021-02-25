@@ -27,7 +27,7 @@ class visual_servoing_test
 {
   public:
     typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::Image,geometry_msgs::PoseStamped,geometry_msgs::PoseStamped,geometry_msgs::PoseStamped> sync_poilicy;
-    message_filters::TimeSynchronizer<sensor_msgs::Image, geometry_msgs::PoseStamped, geometry_msgs::PoseStamped, geometry_msgs::PoseStamped> *sync;
+    message_filters::Synchronizer<sync_poilicy> *sync;
     message_filters::Subscriber<sensor_msgs::Image> *image1_sub;
     message_filters::Subscriber<geometry_msgs::PoseStamped> *roll_sub;
     message_filters::Subscriber<geometry_msgs::PoseStamped> *pitch_sub;
